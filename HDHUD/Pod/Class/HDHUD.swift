@@ -102,6 +102,41 @@ public extension HDHUD {
             }
         }
     }
+    
+    static func show(view: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
+        //remove last view
+        HDHUD.hide()
+        DispatchQueue.main.async {
+            //show new view
+            var tmpSuperView = superView
+            if tmpSuperView == nil {
+                tmpSuperView = HDCommonTools.shared.getCurrentNormalWindow()
+            }
+            guard let tSuperView = tmpSuperView else { return }
+            mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
+            tSuperView.addSubview(mContentBGView)
+            mContentBGView.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+            }
+            
+            mContentBGView.addSubview(view)
+            view.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview().offset(contentOffset.x)
+                make.centerY.equalToSuperview().offset(contentOffset.y)
+            }
+            self.addPopAnimation(view: view)
+
+            if duration > 0 {
+                mTimer = Timer(fire: Date(timeIntervalSinceNow: duration), interval: 0, repeats: false) { (timer) in
+                    HDHUD.hide()
+                    if let completion = completion {
+                        completion()
+                    }
+                }
+                RunLoop.main.add(mTimer!, forMode: .common)
+            }
+        }
+    }
 
     static func hide() {
         if mTimer != nil {
