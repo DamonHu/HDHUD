@@ -7,6 +7,8 @@
 
 import UIKit
 
+var i = 0
+
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -22,34 +24,59 @@ class ViewController: UIViewController {
     }
 
     @objc func p_click() {
-        print("click")
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print("ssssssssss")
-//        HDHUD.show("水电费水电费就还是手动蝶阀接口和收到就好房间号史蒂芬霍金收到就好福建省方法",hudType: .loading, direction: .vertical, duration: 3) {
-//            print("mmmm")
-//        }
-//        HDHUD.showProgress(0.1, direction: .vertical)
-
-        HDHUD.show("修改成功", hudType: .success)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            HDHUD.showProgress(0.3, direction: .vertical)
+        if i == 0 {
+            HDHUD.show("横版排列",hudType: .none, direction: .horizontal)
+        }
+        if i == 1 {
+            HDHUD.show("横版排列",hudType: .warn, direction: .horizontal)
+        }
+        if i == 2 {
+            HDHUD.show("横版排列",hudType: .error, direction: .horizontal)
+        }
+        if i == 3 {
+            HDHUD.show("横版排列",hudType: .success, direction: .horizontal)
+        }
+        if i == 4 {
+            HDHUD.show("横版排列",hudType: .loading, direction: .horizontal)
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            HDHUD.showProgress(0.5, direction: .vertical)
+        if i == 5 {
+            HDHUD.show("竖版排列",hudType: .none, direction: .vertical)
+        }
+        if i == 6 {
+            HDHUD.show("竖版排列",hudType: .warn, direction: .vertical)
+        }
+        if i == 7 {
+            HDHUD.show("竖版排列",hudType: .error, direction: .vertical)
+        }
+        if i == 8 {
+            HDHUD.show("竖版排列",hudType: .success, direction: .vertical)
+        }
+        if i == 9 {
+            HDHUD.show("竖版排列",hudType: .loading, direction: .vertical)
+        }
+        if i == 10 {
+            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行",hudType: .success, direction: .vertical)
+        }
+        if i == 11 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                HDHUD.showProgress(0.3, direction: .vertical)
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                HDHUD.showProgress(0.5, direction: .vertical)
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                HDHUD.showProgress(0.6, direction: .vertical)
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                HDHUD.showProgress(0.9, direction: .vertical)
+            }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            HDHUD.showProgress(0.6, direction: .vertical)
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            HDHUD.showProgress(0.9, direction: .vertical)
-        }
+        i = i+1
     }
 }
 
