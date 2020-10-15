@@ -15,5 +15,6 @@ s.frameworks = 'UIKit'
 s.documentation_url = 'https://github.com/DamonHu/HDHUD'
 
 s.dependency 'HDSwiftCommonTools'
-s.dependency 'SnapKit', '~> 5.0.0'
+s.dependency 'SnapKit'
+s.dependency 'Kingfisher'
 end
