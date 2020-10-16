@@ -22,13 +22,13 @@ public enum HDHUDContentDirection {
 }
 
 open class HDHUD {
-    public static var warnImage = UIImageHDBoundle(named: "ic_warning")
+    public static var warnImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_warning@3x.png"))
     public static var warnImageSize = CGSize(width: 24, height: 24)
-    public static var errorImage = UIImageHDBoundle(named: "ic_error")
+    public static var errorImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_error@3x.png"))
     public static var errorImageSize = CGSize(width: 24, height: 24)
-    public static var successImage = UIImageHDBoundle(named: "ic_success")
+    public static var successImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_success@3x.png"))
     public static var successImageSize = CGSize(width: 24, height: 24)
-    public static var loadingImageURL = URL(fileURLWithPath: Bundle.main.path(forResource: "loading", ofType: "gif")!)
+    public static var loadingImageURL = URL(fileURLWithPath: UIImageHDBoundle(named: "loading.gif"))
     public static var loadingImageSize = CGSize(width: 48, height: 48)
     public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
     public static var textColor = UIColor(hexValue: 0xFFFFFF)
@@ -127,10 +127,11 @@ public extension HDHUD {
 
 //MARK: Private Method
 private extension HDHUD {
-    static func UIImageHDBoundle(named: String?) -> UIImage? {
-        let name = named ?? ""
-        let filePath = Bundle.main.path(forResource: "\(name)@3x", ofType: "png")
-        return UIImage(contentsOfFile: filePath ?? "")
+    static func UIImageHDBoundle(named: String?) -> String {
+        guard let name = named else { return "" }
+        guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: ".bundle") else { return "" }
+        let filePath = Bundle(path: bundlePath)?.path(forResource: name, ofType: "") ?? ""
+        return filePath
     }
 
     static func showView(view: UIView, superView: UIView?) {
