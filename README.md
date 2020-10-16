@@ -132,7 +132,7 @@ HDHUD.backgroundColor = UIColor.red
 
 ## 一、效果图
 
-![](http://blog.hudongdong.com/usr/uploads/2020/10/418197018.gif)
+![](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
 
 ## 二、特点
 
