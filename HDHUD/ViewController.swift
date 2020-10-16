@@ -59,6 +59,7 @@ class ViewController: UIViewController {
             HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行",hudType: .success, direction: .vertical)
         }
         if i == 11 {
+            HDHUD.showProgress(0.1, direction: .vertical)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 HDHUD.showProgress(0.3, direction: .vertical)
             }
@@ -75,6 +76,8 @@ class ViewController: UIViewController {
                 HDHUD.showProgress(0.9, direction: .vertical)
             }
         }
+
+        
 
         i = i+1
     }

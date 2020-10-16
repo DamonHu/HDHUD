@@ -35,8 +35,8 @@ class HDHUDProgressContentView: HDHUDContentView {
     lazy var mProgressView: CircularProgressView = {
         let tProgressView = CircularProgressView(frame: CGRect(x: 27.5, y: 15, width: 65, height: 65))
         tProgressView.trackLineWidth = 5
-        tProgressView.trackTintColor = UIColor(hexValue: 0xffffff)
-        tProgressView.progressTintColor = UIColor(hexValue: 0xFF8F0C)
+        tProgressView.trackTintColor = HDHUD.trackTintColor
+        tProgressView.progressTintColor = HDHUD.progressTintColor
         tProgressView.roundedProgressLineCap = true
         return tProgressView
     }()

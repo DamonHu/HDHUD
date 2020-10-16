@@ -26,11 +26,12 @@ open class HDHUD {
     public static var errorImage = UIImageHDBoundle(named: "ic_error")
     public static var successImage = UIImageHDBoundle(named: "ic_success")
     public static var loadingImageURL = URL(fileURLWithPath: Bundle.main.path(forResource: "loading", ofType: "gif")!)
-    public static var backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
-    public static var textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1.0)
+    public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
+    public static var textColor = UIColor(hexValue: 0xFFFFFF)
     public static var textFont = UIFont.systemFont(ofSize: 16)
     public static var contentOffset = CGPoint.zero
-
+    public static var progressTintColor = UIColor(hexValue: 0xFF8F0C)
+    public static var trackTintColor = UIColor(hexValue: 0xFFFFFF)
     //private members
     private static let mContentBGView = UIView()
     private static var mTimer: Timer? = nil
@@ -38,27 +39,24 @@ open class HDHUD {
 
 //MARK: Public Method
 public extension HDHUD {
+
+
+    /// display HUD
+    /// - Parameters:
+    ///   - content: content text
+    ///   - hudType: icon type
+    ///   - direction: Layout direction of icon and text
+    ///   - duration: specifies the time when the HUD is automatically turned off, `-1` means not to turn off automatically
+    ///   - superView: the upper view of the HUD, the default is the current window
+    ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
+    ///   - completion: callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
     static func show(_ content: String? = nil, hudType: HDHUDType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
         //remove last view
         HDHUD.hide()
         DispatchQueue.main.async {
-            //show new view
-            var tmpSuperView = superView
-            if tmpSuperView == nil {
-                tmpSuperView = HDCommonTools.shared.getCurrentNormalWindow()
-            }
-            guard let tSuperView = tmpSuperView else { return }
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-            tSuperView.addSubview(mContentBGView)
-            mContentBGView.snp.makeConstraints { (make) in
-                make.edges.equalToSuperview()
-            }
             let contentView = HDHUDLabelContentView(content: content, hudType: hudType, direction: direction)
-            mContentBGView.addSubview(contentView)
-            contentView.snp.makeConstraints { (make) in
-                make.centerX.equalToSuperview().offset(contentOffset.x)
-                make.centerY.equalToSuperview().offset(contentOffset.y)
-            }
+            self.showView(view: contentView, superView: superView)
             self.addPopAnimation(view: contentView)
 
             if duration > 0 {
@@ -80,24 +78,10 @@ public extension HDHUD {
             //remove last view
             HDHUD.hide()
             DispatchQueue.main.async {
-                //show new view
-                var tmpSuperView = superView
-                if tmpSuperView == nil {
-                    tmpSuperView = HDCommonTools.shared.getCurrentNormalWindow()
-                }
-                guard let tSuperView = tmpSuperView else { return }
                 mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-                tSuperView.addSubview(mContentBGView)
-                mContentBGView.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
-                }
                 let contentView = HDHUDProgressContentView(direction: direction)
                 contentView.progress = progress
-                mContentBGView.addSubview(contentView)
-                contentView.snp.makeConstraints { (make) in
-                    make.centerX.equalToSuperview().offset(contentOffset.x)
-                    make.centerY.equalToSuperview().offset(contentOffset.y)
-                }
+                self.showView(view: contentView, superView: superView)
                 self.addPopAnimation(view: contentView)
             }
         }
@@ -107,23 +91,8 @@ public extension HDHUD {
         //remove last view
         HDHUD.hide()
         DispatchQueue.main.async {
-            //show new view
-            var tmpSuperView = superView
-            if tmpSuperView == nil {
-                tmpSuperView = HDCommonTools.shared.getCurrentNormalWindow()
-            }
-            guard let tSuperView = tmpSuperView else { return }
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-            tSuperView.addSubview(mContentBGView)
-            mContentBGView.snp.makeConstraints { (make) in
-                make.edges.equalToSuperview()
-            }
-            
-            mContentBGView.addSubview(view)
-            view.snp.makeConstraints { (make) in
-                make.centerX.equalToSuperview().offset(contentOffset.x)
-                make.centerY.equalToSuperview().offset(contentOffset.y)
-            }
+            self.showView(view: view, superView: superView)
             self.addPopAnimation(view: view)
 
             if duration > 0 {
@@ -158,6 +127,26 @@ private extension HDHUD {
         let name = named ?? ""
         let filePath = Bundle.main.path(forResource: "\(name)@3x", ofType: "png")
         return UIImage(contentsOfFile: filePath ?? "")
+    }
+
+    static func showView(view: UIView, superView: UIView?) {
+        //show new view
+        var tmpSuperView = superView
+        if tmpSuperView == nil {
+            tmpSuperView = HDCommonTools.shared.getCurrentNormalWindow()
+        }
+        guard let tSuperView = tmpSuperView else { return }
+
+        tSuperView.addSubview(mContentBGView)
+        mContentBGView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+
+        mContentBGView.addSubview(view)
+        view.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview().offset(contentOffset.x)
+            make.centerY.equalToSuperview().offset(contentOffset.y)
+        }
     }
 
     static func addPopAnimation(view: UIView) {
