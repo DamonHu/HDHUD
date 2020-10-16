@@ -131,6 +131,8 @@ HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
 
 ![](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
 
+效果图不显示的话可以点击该链接进行查看：[http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
+
 ## 二、特点
 
 简单易用，通过不同的参数，实现不同的展示效果
