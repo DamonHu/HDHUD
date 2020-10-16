@@ -25,38 +25,38 @@ class ViewController: UIViewController {
 
     @objc func p_click() {
         if i == 0 {
-            HDHUD.show("横版排列",hudType: .none, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .none, direction: .horizontal)
         }
         if i == 1 {
-            HDHUD.show("横版排列",hudType: .warn, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .warn, direction: .horizontal)
         }
         if i == 2 {
-            HDHUD.show("横版排列",hudType: .error, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .error, direction: .horizontal)
         }
         if i == 3 {
-            HDHUD.show("横版排列",hudType: .success, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .success, direction: .horizontal)
         }
         if i == 4 {
-            HDHUD.show("横版排列",hudType: .loading, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .loading, direction: .horizontal)
         }
 
         if i == 5 {
-            HDHUD.show("竖版排列",hudType: .none, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .none, direction: .vertical)
         }
         if i == 6 {
-            HDHUD.show("竖版排列",hudType: .warn, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .warn, direction: .vertical)
         }
         if i == 7 {
-            HDHUD.show("竖版排列",hudType: .error, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .error, direction: .vertical)
         }
         if i == 8 {
-            HDHUD.show("竖版排列",hudType: .success, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .success, direction: .vertical)
         }
         if i == 9 {
-            HDHUD.show("竖版排列",hudType: .loading, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .loading, direction: .vertical)
         }
         if i == 10 {
-            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行",hudType: .success, direction: .vertical)
+            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical)
         }
         if i == 11 {
             HDHUD.showProgress(0.1, direction: .vertical)

@@ -8,7 +8,7 @@
 import UIKit
 import HDCommonToolsSwift
 
-public enum HDHUDType {
+public enum HDHUDIconType {
     case none
     case warn
     case error
@@ -48,18 +48,18 @@ public extension HDHUD {
     /// display HUD
     /// - Parameters:
     ///   - content: content text
-    ///   - hudType: icon type
+    ///   - icon: icon type
     ///   - direction: Layout direction of icon and text
     ///   - duration: specifies the time when the HUD is automatically turned off, `-1` means not to turn off automatically
     ///   - superView: the upper view of the HUD, the default is the current window
     ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
     ///   - completion: callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
-    static func show(_ content: String? = nil, hudType: HDHUDType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
+    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
         //remove last view
         HDHUD.hide()
         DispatchQueue.main.async {
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-            let contentView = HDHUDLabelContentView(content: content, hudType: hudType, direction: direction)
+            let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
             self.showView(view: contentView, superView: superView)
             self.addPopAnimation(view: contentView)
 

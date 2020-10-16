@@ -43,13 +43,13 @@ HDHUD.show("plain text display")
 You can also display text with icon through parameter settings
 
 ```
-HDHUD.show("icon display",hudType: .warn)
+HDHUD.show("icon display",icon: .warn)
 ```
 
 `Icon` has five performance styles by default, you can modify the displayed image by setting the parameter `warnImage`
 
 ```
-public enum HDHUDType {
+public enum HDHUDIconType {
     case none
     case warn
     case error
@@ -61,13 +61,13 @@ public enum HDHUDType {
 The default is that the icon is on the left and the text is on the right. You can change the layout direction of icon and text
 
 ```
-HDHUD.show("Vertical arrangement",hudType: .warn, direction: .vertical)
+HDHUD.show("Vertical arrangement",icon: .warn, direction: .vertical)
 ```
 
 The content is not necessary. If you only want to show loading and other styles with only `icon`, then you can use
 
 ```
-HDHUD.show(hudType: .loading)
+HDHUD.show(icon: .loading)
 ```
 
 ### 3.2, progress HUD
@@ -94,14 +94,14 @@ HDHUD.show(view: customView)
 
 More parameters can be set for personalized use
 
-* `hudType` icon type
+* `icon` icon type
 * `duration` specifies the time when the HUD is automatically turned off, `-1` means not to turn off automatically
 * `superView` specifies the upper view of the HUD, the default is the current window
 * `userInteractionOnUnderlyingViewsEnabled`  whether the bottom view responds when the hud pops up
 * `completion` callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
 
 ```
-HDHUD.show("Text Information", hudType: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true) {
+HDHUD.show("Text Information", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true) {
        //Automatically closed callback
 }
 ```
@@ -162,13 +162,13 @@ HDHUD.show("纯文本展示")
 也可以通过参数设置进行带icon的文本展示
 
 ```
-HDHUD.show("icon展示",hudType: .warn)
+HDHUD.show("icon展示",icon: .warn)
 ```
 
 `icon`默认有五种表现风格，你可以通过设置对应的`warnImage`去修改展示的图片
 
 ```
-public enum HDHUDType {
+public enum HDHUDIconType {
     case none
     case warn
     case error
@@ -180,13 +180,13 @@ public enum HDHUDType {
 默认为icon在左侧，文本在右侧，您可以指定icon和文本的排列方式
 
 ```
-HDHUD.show("竖版排列",hudType: .warn, direction: .vertical)
+HDHUD.show("竖版排列",icon: .warn, direction: .vertical)
 ```
 
 内容不是必须项，如果你只想展示loading等只有`icon`的样式，那么可以使用
 
 ```
-HDHUD.show(hudType: .loading)
+HDHUD.show(icon: .loading)
 ```
 
 ### 3.2、进度HUD
@@ -213,14 +213,14 @@ HDHUD.show(view: customView)
 
 可以设置更多参数进行个性化使用
 
-* `hudType` icon类型
+* `icon` icon类型
 * `duration`指定HUD的自动关闭的时间， `-1`为不自动关闭
 * `superView` 指定HUD的上层View，默认为当前的window
 * `userInteractionOnUnderlyingViewsEnabled` HUD弹出之后，底部view是否响应点击
 * `completion` 自动关闭之后的回调，如果`duration`设置为-1，不会进行调用
 
 ```
-HDHUD.show("文本信息", hudType: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true) {
+HDHUD.show("文本信息", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true) {
        //自动关闭的回调
 }
 ```

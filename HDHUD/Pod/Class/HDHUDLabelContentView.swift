@@ -10,9 +10,9 @@ import Kingfisher
 
 class HDHUDLabelContentView: HDHUDContentView {
 
-    init(content: String? = nil, hudType: HDHUDType, direction: HDHUDContentDirection = .horizontal) {
+    init(content: String? = nil, icon: HDHUDIconType, direction: HDHUDContentDirection = .horizontal) {
         super.init()
-        self.createUI(content: content, hudType: hudType, direction: direction)
+        self.createUI(content: content, icon: icon, direction: direction)
     }
 
     required init?(coder: NSCoder) {
@@ -35,9 +35,9 @@ class HDHUDLabelContentView: HDHUDContentView {
 }
 
 extension HDHUDLabelContentView {
-    func createUI(content: String?, hudType: HDHUDType, direction: HDHUDContentDirection) {
+    func createUI(content: String?, icon: HDHUDIconType, direction: HDHUDContentDirection) {
         var imageSize = CGSize.zero
-        switch hudType {
+        switch icon {
             case .none:
                 mImageView.image = nil
             case .warn:
@@ -73,7 +73,7 @@ extension HDHUDLabelContentView {
             }
             return
         }
-        guard hudType != .none else {
+        guard icon != .none else {
             mLabel.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview().inset(15)
             }
