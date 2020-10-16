@@ -23,9 +23,13 @@ public enum HDHUDContentDirection {
 
 open class HDHUD {
     public static var warnImage = UIImageHDBoundle(named: "ic_warning")
+    public static var warnImageSize = CGSize(width: 24, height: 24)
     public static var errorImage = UIImageHDBoundle(named: "ic_error")
+    public static var errorImageSize = CGSize(width: 24, height: 24)
     public static var successImage = UIImageHDBoundle(named: "ic_success")
+    public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImageURL = URL(fileURLWithPath: Bundle.main.path(forResource: "loading", ofType: "gif")!)
+    public static var loadingImageSize = CGSize(width: 48, height: 48)
     public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
     public static var textColor = UIColor(hexValue: 0xFFFFFF)
     public static var textFont = UIFont.systemFont(ofSize: 16)

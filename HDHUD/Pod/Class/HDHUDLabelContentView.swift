@@ -36,17 +36,22 @@ class HDHUDLabelContentView: HDHUDContentView {
 
 extension HDHUDLabelContentView {
     func createUI(content: String?, hudType: HDHUDType, direction: HDHUDContentDirection) {
+        var imageSize = CGSize.zero
         switch hudType {
             case .none:
                 mImageView.image = nil
             case .warn:
                 mImageView.image = HDHUD.warnImage
+                imageSize = HDHUD.warnImageSize
             case .error:
                 mImageView.image = HDHUD.errorImage
+                imageSize = HDHUD.errorImageSize
             case .success:
                 mImageView.image = HDHUD.successImage
+                imageSize = HDHUD.successImageSize
             case .loading:
                 mImageView.kf.setImage(with: HDHUD.loadingImageURL)
+                imageSize = HDHUD.loadingImageSize
         }
         mLabel.text = content
 
@@ -64,11 +69,7 @@ extension HDHUDLabelContentView {
             }
             mImageView.snp.makeConstraints { (make) in
                 make.center.equalToSuperview()
-                if hudType == .loading {
-                    make.width.height.equalTo(48)
-                } else {
-                    make.width.height.equalTo(24)
-                }
+                make.size.equalTo(imageSize)
             }
             return
         }
@@ -80,12 +81,7 @@ extension HDHUDLabelContentView {
         }
 
         mImageView.snp.makeConstraints { (make) in
-            if hudType == .loading {
-                make.width.height.equalTo(48)
-            } else {
-                make.width.height.equalTo(24)
-            }
-
+            make.size.equalTo(imageSize)
             if direction == .horizontal {
                 make.left.equalToSuperview().offset(15)
                 make.centerY.equalToSuperview()
