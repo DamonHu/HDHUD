@@ -106,27 +106,24 @@ HDHUD.show("Text Information", hudType: .warn, direction: .vertical, duration: 3
 }
 ```
 
-You can modify the global pop-up window display through other custom settings
+You can modify the global pop-up window display through other custom settings. For example, set the background color of the HUD
 
 ```
-public static var warnImage = UIImageHDBoundle(named: "ic_warning")
-public static var errorImage = UIImageHDBoundle(named: "ic_error")
-public static var successImage = UIImageHDBoundle(named: "ic_success")
-public static var loadingImageURL = URL(fileURLWithPath: Bundle.main.path(forResource: "loading", ofType: "gif")!)
-public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
-public static var textColor = UIColor(hexValue: 0xFFFFFF)
-public static var textFont = UIFont.systemFont(ofSize: 16)
-public static var contentOffset = CGPoint.zero
-public static var progressTintColor = UIColor(hexValue: 0xFF8F0C)
-public static var trackTintColor = UIColor(hexValue: 0xFFFFFF)
+HDHUD.warnImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_warning@3x.png"))
+HDHUD.warnImageSize = CGSize(width: 24, height: 24)
+HDHUD.errorImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_error@3x.png"))
+HDHUD.errorImageSize = CGSize(width: 24, height: 24)
+HDHUD.successImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_success@3x.png"))
+HDHUD.successImageSize = CGSize(width: 24, height: 24)
+HDHUD.loadingImageURL = URL(fileURLWithPath: UIImageHDBoundle(named: "loading.gif"))
+HDHUD.loadingImageSize = CGSize(width: 48, height: 48)
+HDHUD.backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
+HDHUD.textColor = UIColor(hexValue: 0xFFFFFF)
+HDHUD.textFont = UIFont.systemFont(ofSize: 16)
+HDHUD.contentOffset = CGPoint.zero
+HDHUD.progressTintColor = UIColor(hexValue: 0xFF8F0C)
+HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
 ```
-
-For example, set the background color of the HUD
-
-```
-HDHUD.backgroundColor = UIColor.red
-```
-
 
 <span id = "chinese"></span>
 
@@ -228,23 +225,21 @@ HDHUD.show("文本信息", hudType: .warn, direction: .vertical, duration: 3.0, 
 }
 ```
 
-可以通过其他自定义设置进行全局的弹窗显示修改
+可以通过其他自定义设置进行全局的弹窗显示修改，例如设置HUD的内容背景色等
 
 ```
-public static var warnImage = UIImageHDBoundle(named: "ic_warning")
-public static var errorImage = UIImageHDBoundle(named: "ic_error")
-public static var successImage = UIImageHDBoundle(named: "ic_success")
-public static var loadingImageURL = URL(fileURLWithPath: Bundle.main.path(forResource: "loading", ofType: "gif")!)
-public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
-public static var textColor = UIColor(hexValue: 0xFFFFFF)
-public static var textFont = UIFont.systemFont(ofSize: 16)
-public static var contentOffset = CGPoint.zero
-public static var progressTintColor = UIColor(hexValue: 0xFF8F0C)
-public static var trackTintColor = UIColor(hexValue: 0xFFFFFF)
-```
-
-例如设置HUD的内容背景色
-
-```
-HDHUD.backgroundColor = UIColor.red
+HDHUD.warnImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_warning@3x.png"))
+HDHUD.warnImageSize = CGSize(width: 24, height: 24)
+HDHUD.errorImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_error@3x.png"))
+HDHUD.errorImageSize = CGSize(width: 24, height: 24)
+HDHUD.successImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_success@3x.png"))
+HDHUD.successImageSize = CGSize(width: 24, height: 24)
+HDHUD.loadingImageURL = URL(fileURLWithPath: UIImageHDBoundle(named: "loading.gif"))
+HDHUD.loadingImageSize = CGSize(width: 48, height: 48)
+HDHUD.backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
+HDHUD.textColor = UIColor(hexValue: 0xFFFFFF)
+HDHUD.textFont = UIFont.systemFont(ofSize: 16)
+HDHUD.contentOffset = CGPoint.zero
+HDHUD.progressTintColor = UIColor(hexValue: 0xFF8F0C)
+HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
 ```
