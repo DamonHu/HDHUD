@@ -197,12 +197,12 @@ if [ -r "${ARTIFACT_LIST_FILE}" ]; then
 fi
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/HDSwiftCommonTools/HDSwiftCommonTools.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/HDCommonToolsSwift/HDCommonToolsSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/HDSwiftCommonTools/HDSwiftCommonTools.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/HDCommonToolsSwift/HDCommonToolsSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework"
 fi

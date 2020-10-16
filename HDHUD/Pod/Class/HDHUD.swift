@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import HDSwiftCommonTools
+import HDCommonToolsSwift
 
 public enum HDHUDType {
     case none
@@ -138,7 +138,7 @@ private extension HDHUD {
         //show new view
         var tmpSuperView = superView
         if tmpSuperView == nil {
-            tmpSuperView = HDCommonTools.shared.getCurrentNormalWindow()
+            tmpSuperView = HDCommonToolsSwift.shared.getCurrentNormalWindow()
         }
         guard let tSuperView = tmpSuperView else { return }
 

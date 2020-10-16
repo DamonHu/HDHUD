@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import HDSwiftCommonTools
+import HDCommonToolsSwift
 
 class HDHUDProgressContentView: HDHUDContentView {
     var progress: Float = 0 {
