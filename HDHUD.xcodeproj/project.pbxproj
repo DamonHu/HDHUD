@@ -21,6 +21,7 @@
 		E4461BF525383A4700B6BA35 /* HDHUDLabelContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BF425383A4600B6BA35 /* HDHUDLabelContentView.swift */; };
 		E4461BFA25384D0E00B6BA35 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BF925384D0E00B6BA35 /* CircularProgressView.swift */; };
 		E4461BFD25384D2600B6BA35 /* HDHUDProgressContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BFC25384D2600B6BA35 /* HDHUDProgressContentView.swift */; };
+		E45AFA19255523C10029F2D4 /* ic_tip_close_button@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45AFA18255523C00029F2D4 /* ic_tip_close_button@3x.png */; };
 		E5E05A9553A7FD5A0E00B3BE /* Pods_HDHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDF8C11D407B63CE14726CAD /* Pods_HDHUD.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 		E4461BF425383A4600B6BA35 /* HDHUDLabelContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDHUDLabelContentView.swift; sourceTree = "<group>"; };
 		E4461BF925384D0E00B6BA35 /* CircularProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		E4461BFC25384D2600B6BA35 /* HDHUDProgressContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDHUDProgressContentView.swift; sourceTree = "<group>"; };
+		E45AFA18255523C00029F2D4 /* ic_tip_close_button@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_tip_close_button@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 		E4461BC8253829FC00B6BA35 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				E45AFA18255523C00029F2D4 /* ic_tip_close_button@3x.png */,
 				E4461BF02538321B00B6BA35 /* loading.gif */,
 				E4461BE325382C1800B6BA35 /* ic_success@3x.png */,
 				E4461BDD25382C1200B6BA35 /* ic_error@3x.png */,
@@ -198,6 +201,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E45AFA19255523C10029F2D4 /* ic_tip_close_button@3x.png in Resources */,
 				E4461BDF25382C1200B6BA35 /* ic_error@3x.png in Resources */,
 				E4461BDA25382BFC00B6BA35 /* ic_warning@3x.png in Resources */,
 				E4461BBF2538296600B6BA35 /* LaunchScreen.storyboard in Resources */,

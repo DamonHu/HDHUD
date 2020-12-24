@@ -16,9 +16,25 @@ public enum HDHUDIconType {
     case loading
 }
 
+
 public enum HDHUDContentDirection {
     case vertical
     case horizontal
+}
+
+
+///当页面正在展示toast，此时调用loading显示，会根据优先级的设置进行展示。
+///low： loading不显示，只显示toast
+///common: loading和toast同时叠加显示
+///high：关闭toast，展示loading
+///When the page is displaying toast, the loading display is called, and it will be displayed according to the priority setting.
+///Low: loading is not displayed, only toast is displayed
+///Common: loading and toast are superimposed at the same time
+///High: close toast and show loading
+public enum HDHUDLoadingPriority {
+    case low
+    case common
+    case high
 }
 
 open class HDHUD {
@@ -36,7 +52,12 @@ open class HDHUD {
     public static var contentOffset = CGPoint.zero
     public static var progressTintColor = UIColor(hexValue: 0xFF8F0C)
     public static var trackTintColor = UIColor(hexValue: 0xFFFFFF)
+    //Display form when loading and toast appear at the same time
+    public static var loadingPriority = HDHUDLoadingPriority.high
+
     //private members
+    private static var mCurrentIconType: HDHUDIconType?
+    private static var mNextIconType = HDHUDIconType.none
     private static let mContentBGView = UIView()
     private static var mTimer: Timer? = nil
 }
@@ -55,15 +76,37 @@ public extension HDHUD {
     ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
     ///   - completion: callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
     static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
+        //下次即将显示的toast
+        mNextIconType = icon
+        //根据下次即将显示的类型进行清理
         //remove last view
-        HDHUD.hide()
+        if self.mNextIconType == .loading, let currentIconType = mCurrentIconType, currentIconType != .loading {
+            switch self.loadingPriority {
+                case .low:
+                    return
+                case .common:
+                    break
+                case .high:
+                    HDHUD.hide()
+            }
+        } else {
+            HDHUD.hide()
+        }
         DispatchQueue.main.async {
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
             let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
             self.showView(view: contentView, superView: superView)
             self.addPopAnimation(view: contentView)
+            //设置当前正在显示的hud类型
+            if mCurrentIconType == nil {
+                mCurrentIconType = icon
+            }
 
             if duration > 0 {
+                if mTimer != nil {
+                    mTimer?.invalidate()
+                    mTimer = nil
+                }
                 mTimer = Timer(fire: Date(timeIntervalSinceNow: duration), interval: 0, repeats: false) { (timer) in
                     HDHUD.hide()
                     if let completion = completion {
@@ -79,7 +122,6 @@ public extension HDHUD {
         if let progressContentView = mContentBGView.subviews.first as? HDHUDProgressContentView {
             progressContentView.progress = progress
         } else {
-            //remove last view
             HDHUD.hide()
             DispatchQueue.main.async {
                 mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
@@ -91,13 +133,12 @@ public extension HDHUD {
         }
     }
     
-    static func show(view: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
-        //remove last view
+    static func show(commonView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
         HDHUD.hide()
         DispatchQueue.main.async {
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-            self.showView(view: view, superView: superView)
-            self.addPopAnimation(view: view)
+            self.showView(view: commonView, superView: superView)
+            self.addPopAnimation(view: commonView)
 
             if duration > 0 {
                 mTimer = Timer(fire: Date(timeIntervalSinceNow: duration), interval: 0, repeats: false) { (timer) in
@@ -122,6 +163,8 @@ public extension HDHUD {
             }
             mContentBGView.removeFromSuperview()
         }
+        mNextIconType = .none
+        mCurrentIconType = nil
     }
 }
 
@@ -147,7 +190,7 @@ private extension HDHUD {
             make.edges.equalToSuperview()
         }
 
-        mContentBGView.addSubview(view)
+        mContentBGView.insertSubview(view, at: 0)
         view.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview().offset(contentOffset.x)
             make.centerY.equalToSuperview().offset(contentOffset.y)
