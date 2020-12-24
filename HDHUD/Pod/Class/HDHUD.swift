@@ -22,7 +22,6 @@ public enum HDHUDContentDirection {
     case horizontal
 }
 
-
 ///当页面正在展示toast，此时调用loading显示，会根据优先级的设置进行展示。
 ///low： loading不显示，只显示toast
 ///common: loading和toast同时叠加显示
