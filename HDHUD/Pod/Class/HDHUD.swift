@@ -151,19 +151,22 @@ public extension HDHUD {
         }
     }
 
-    static func hide() {
-        if mTimer != nil {
-            mTimer?.invalidate()
-            mTimer = nil
-        }
-        DispatchQueue.main.async {
-            for view in mContentBGView.subviews {
-                view.removeFromSuperview()
+    static func hide(type: HDHUDIconType? = nil) {
+        if type == nil || (type != nil && type == mCurrentIconType) {
+            //没有指定隐藏类型，或者隐藏类型和当前显示类型一致才销毁
+            if mTimer != nil {
+                mTimer?.invalidate()
+                mTimer = nil
             }
-            mContentBGView.removeFromSuperview()
+            DispatchQueue.main.async {
+                for view in mContentBGView.subviews {
+                    view.removeFromSuperview()
+                }
+                mContentBGView.removeFromSuperview()
+            }
+            mNextIconType = .none
+            mCurrentIconType = nil
         }
-        mNextIconType = .none
-        mCurrentIconType = nil
     }
 }
 
