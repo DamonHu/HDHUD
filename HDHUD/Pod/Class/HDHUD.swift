@@ -75,23 +75,23 @@ public extension HDHUD {
     ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
     ///   - completion: callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
     static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
-        //下次即将显示的toast
-        mNextIconType = icon
-        //根据下次即将显示的类型进行清理
-        //remove last view
-        if self.mNextIconType == .loading, let currentIconType = mCurrentIconType, currentIconType != .loading {
-            switch self.loadingPriority {
-                case .low:
-                    return
-                case .common:
-                    break
-                case .high:
-                    HDHUD.hide()
-            }
-        } else {
-            HDHUD.hide()
-        }
         DispatchQueue.main.async {
+            //下次即将显示的toast
+            mNextIconType = icon
+            //根据下次即将显示的类型进行清理
+            //remove last view
+            if self.mNextIconType == .loading, let currentIconType = mCurrentIconType, currentIconType != .loading {
+                switch self.loadingPriority {
+                    case .low:
+                        return
+                    case .common:
+                        break
+                    case .high:
+                        HDHUD.hide()
+                }
+            } else {
+                HDHUD.hide()
+            }
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
             let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
             self.showView(view: contentView, superView: superView)
@@ -118,11 +118,11 @@ public extension HDHUD {
     }
 
     static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true) {
-        if let progressContentView = mContentBGView.subviews.first as? HDHUDProgressContentView {
-            progressContentView.progress = progress
-        } else {
-            HDHUD.hide()
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if let progressContentView = mContentBGView.subviews.first as? HDHUDProgressContentView {
+                progressContentView.progress = progress
+            } else {
+                HDHUD.hide()
                 mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
                 let contentView = HDHUDProgressContentView(direction: direction)
                 contentView.progress = progress
@@ -133,8 +133,8 @@ public extension HDHUD {
     }
     
     static func show(commonView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
-        HDHUD.hide()
         DispatchQueue.main.async {
+            HDHUD.hide()
             mContentBGView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
             self.showView(view: commonView, superView: superView)
             self.addPopAnimation(view: commonView)
@@ -152,20 +152,36 @@ public extension HDHUD {
     }
 
     static func hide(type: HDHUDIconType? = nil) {
-        if type == nil || (type != nil && type == mCurrentIconType) {
-            //没有指定隐藏类型，或者隐藏类型和当前显示类型一致才销毁
-            if mTimer != nil {
-                mTimer?.invalidate()
-                mTimer = nil
-            }
-            DispatchQueue.main.async {
+        if Thread.isMainThread {
+            if type == nil || (type != nil && type == mCurrentIconType) {
+                //没有指定隐藏类型，或者隐藏类型和当前显示类型一致才销毁
+                if mTimer != nil {
+                    mTimer?.invalidate()
+                    mTimer = nil
+                }
                 for view in mContentBGView.subviews {
                     view.removeFromSuperview()
                 }
                 mContentBGView.removeFromSuperview()
+                mNextIconType = .none
+                mCurrentIconType = nil
             }
-            mNextIconType = .none
-            mCurrentIconType = nil
+        } else {
+            DispatchQueue.main.async {
+                if type == nil || (type != nil && type == mCurrentIconType) {
+                    //没有指定隐藏类型，或者隐藏类型和当前显示类型一致才销毁
+                    if mTimer != nil {
+                        mTimer?.invalidate()
+                        mTimer = nil
+                    }
+                    for view in mContentBGView.subviews {
+                        view.removeFromSuperview()
+                    }
+                    mContentBGView.removeFromSuperview()
+                    mNextIconType = .none
+                    mCurrentIconType = nil
+                }
+            }
         }
     }
 }

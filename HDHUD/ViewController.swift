@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-
+        self.view.backgroundColor = UIColor.green
         let button = UIButton(type: .custom)
         button.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
         button.backgroundColor = UIColor.red
@@ -24,6 +24,7 @@ class ViewController: UIViewController {
     }
 
     @objc func p_click() {
+        print("点击")
         if i == 0 {
             HDHUD.show("横版排列", icon: .none, direction: .horizontal)
         }
