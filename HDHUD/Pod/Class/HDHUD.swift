@@ -37,13 +37,13 @@ public enum HDHUDLoadingPriority {
 }
 
 open class HDHUD {
-    public static var warnImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_warning@3x.png"))
+    public static var warnImage = UIImageHDBoundle(named: "ic_warning")
     public static var warnImageSize = CGSize(width: 24, height: 24)
-    public static var errorImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_error@3x.png"))
+    public static var errorImage = UIImageHDBoundle(named: "ic_error")
     public static var errorImageSize = CGSize(width: 24, height: 24)
-    public static var successImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_success@3x.png"))
+    public static var successImage = UIImageHDBoundle(named: "ic_success")
     public static var successImageSize = CGSize(width: 24, height: 24)
-    public static var loadingImageURL = URL(fileURLWithPath: UIImageHDBoundle(named: "loading.gif"))
+    public static var loadingImageURL = URL(fileURLWithPath: URLPathHDBoundle(named: "loading.gif"))
     public static var loadingImageSize = CGSize(width: 48, height: 48)
     public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
     public static var textColor = UIColor(hexValue: 0xFFFFFF)
@@ -207,9 +207,16 @@ private extension HDHUD {
 }
 
 private extension HDHUD {
-    static func UIImageHDBoundle(named: String?) -> String {
+    static func UIImageHDBoundle(named: String?) -> UIImage? {
+        guard let name = named else { return nil }
+        guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: "bundle") else { return nil }
+        let bundle = Bundle(path: bundlePath)
+        return UIImage(named: name, in: bundle, compatibleWith: nil)
+    }
+
+    static func URLPathHDBoundle(named: String?) -> String {
         guard let name = named else { return "" }
-        guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: ".bundle") else { return "" }
+        guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: "bundle") else { return "" }
         let filePath = Bundle(path: bundlePath)?.path(forResource: name, ofType: "") ?? ""
         return filePath
     }
