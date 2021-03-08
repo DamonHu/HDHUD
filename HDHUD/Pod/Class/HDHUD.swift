@@ -235,9 +235,19 @@ private extension HDHUD {
         }
 
         mContentBGView.insertSubview(view, at: 0)
-        view.snp.makeConstraints { (make) in
-            make.centerX.equalToSuperview().offset(contentOffset.x)
-            make.centerY.equalToSuperview().offset(contentOffset.y)
+
+        if view.frame.size.width > 0 || view.frame.size.height > 0 {
+            view.snp.remakeConstraints { (make) in
+                make.centerX.equalToSuperview().offset(contentOffset.x)
+                make.centerY.equalToSuperview().offset(contentOffset.y)
+                make.width.equalTo(view.frame.size.width)
+                make.height.equalTo(view.frame.size.height)
+            }
+        } else {
+            view.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview().offset(contentOffset.x)
+                make.centerY.equalToSuperview().offset(contentOffset.y)
+            }
         }
     }
 
