@@ -90,6 +90,36 @@ Reserve the function of displaying custom views, you can display your own views
 HDHUD.show(view: customView)
 ```
 
+Note: You need to set size constraints for your own view, you can use the `SnapKit` setting, for example
+
+```
+//Custom view using snapkit layout
+lazy var mCustomView2: UIView = {
+     let view = UIView()
+     //set size
+     view.snp.makeConstraints { (make) in
+           make.width.equalTo(200)
+           make.height.equalTo(100)
+     }
+     return view
+}()
+
+//show
+HDHUD.show(commonView: mCustomView2)
+```
+
+You can also use frame settings directly
+
+```
+lazy var mCustomView: UIView = {
+     let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+     return view
+}()
+
+//show
+HDHUD.show(commonView: mCustomView)
+```
+
 ### 3.4, general settings
 
 More parameters can be set for personalized use
@@ -224,6 +254,7 @@ lazy var mCustomView2: UIView = {
      }
      return view
 }()
+
 //显示
 HDHUD.show(commonView: mCustomView2)
 ```
@@ -235,6 +266,9 @@ lazy var mCustomView: UIView = {
      let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
      return view
 }()
+
+//显示
+HDHUD.show(commonView: mCustomView)
 ```
 
 
