@@ -211,6 +211,33 @@ HDHUD.hide()
 HDHUD.show(view: customView)
 ```
 
+注意：自己的view需要设置大小的约束，可以使用`SnapKit`设置，例如
+
+```
+//自定义视图使用snapkit布局
+lazy var mCustomView2: UIView = {
+     let view = UIView()
+     //设置大小
+     view.snp.makeConstraints { (make) in
+           make.width.equalTo(200)
+           make.height.equalTo(100)
+     }
+     return view
+}()
+//显示
+HDHUD.show(commonView: mCustomView2)
+```
+
+也可以直接使用frame设置
+
+```
+lazy var mCustomView: UIView = {
+     let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+     return view
+}()
+```
+
+
 ### 3.4、通用设置
 
 可以设置更多参数进行个性化使用
