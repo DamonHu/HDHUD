@@ -1,6 +1,6 @@
 //
-//  HDCommonToolsSwift+permission.swift
-//  HDCommonToolsSwift
+//  ZXKitUtil+permission.swift
+//  ZXKitUtil
 //
 //  Created by Damon on 2020/7/3.
 //  Copyright © 2020 Damon. All rights reserved.
@@ -11,7 +11,10 @@ import AVFoundation
 import Photos
 import UserNotifications
 
-public enum HDPermissionType {
+private var mLocationManager: CLLocationManager?   //定位管理
+private var locationComplete: ((ZXKitUtilPermissionStatus) -> Void)?    //定位结束
+
+public enum ZXKitUtilPermissionType {
     case audio          //麦克风权限
     case video          //相机权限
     case photoLibrary   //相册权限
@@ -19,16 +22,17 @@ public enum HDPermissionType {
     case notification   //通知权限
 }
 
-public enum HDPermissionStatus {
+public enum ZXKitUtilPermissionStatus {
     case authorized     //用户允许
     case restricted     //被限制修改不了状态,比如家长控制选项等
     case denied         //用户拒绝
     case notDetermined  //用户尚未选择
+    case limited        //部分允许，iOS14之后增加的特性
 }
 
-public extension HDCommonToolsSwift {
+public extension ZXKitUtil {
     ///请求权限
-    func requestPermission(type: HDPermissionType, complete: @escaping ((HDPermissionStatus) -> Void)) -> Void {
+    func requestPermission(type: ZXKitUtilPermissionType, complete: @escaping ((ZXKitUtilPermissionStatus) -> Void)) -> Void {
         switch type {
         case .audio:
             AVCaptureDevice.requestAccess(for: .audio) { (granted) in
@@ -57,18 +61,20 @@ public extension HDCommonToolsSwift {
                     complete(.denied)
                 case .authorized:
                     complete(.authorized)
-                @unknown default:
+                case .limited:
+                    complete(.limited)
+                default:
                     complete(.authorized)
                 }
             }
         case .GPS:
-            CLLocationManager().requestWhenInUseAuthorization()
-            CLLocationManager().requestAlwaysAuthorization()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                self.checkPermission(type: HDPermissionType.GPS, complete: complete)
-            }
+            mLocationManager = CLLocationManager()
+            mLocationManager?.delegate = self
+            mLocationManager?.requestWhenInUseAuthorization()
+            mLocationManager?.requestAlwaysAuthorization()
+            locationComplete = complete
         case .notification:
-            UNUserNotificationCenter.current().requestAuthorization(options: UNAuthorizationOptions(rawValue: UNAuthorizationOptions.alert.rawValue | UNAuthorizationOptions.sound.rawValue | UNAuthorizationOptions.badge.rawValue)) { (granted, error) in
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
                 if granted {
                     complete(.authorized)
                 } else {
@@ -79,7 +85,7 @@ public extension HDCommonToolsSwift {
     }
     
     ///检测权限
-    func checkPermission(type: HDPermissionType, complete: @escaping ((HDPermissionStatus) -> Void)) -> Void {
+    func checkPermission(type: ZXKitUtilPermissionType, complete: @escaping ((ZXKitUtilPermissionStatus) -> Void)) -> Void {
         switch type {
         case .audio:
             let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.audio)
@@ -92,7 +98,7 @@ public extension HDCommonToolsSwift {
                 complete(.denied)
             case .authorized:
                 complete(.authorized)
-            @unknown default:
+            default:
                 complete(.authorized)
             }
         case .video:
@@ -106,7 +112,7 @@ public extension HDCommonToolsSwift {
                 complete(.denied)
             case .authorized:
                 complete(.authorized)
-            @unknown default:
+            default:
                 complete(.authorized)
             }
         case .photoLibrary:
@@ -120,7 +126,9 @@ public extension HDCommonToolsSwift {
                 complete(.denied)
             case .authorized:
                 complete(.authorized)
-            @unknown default:
+            case .limited:
+                complete(.limited)
+            default:
                 complete(.authorized)
             }
         case .GPS:
@@ -144,10 +152,49 @@ public extension HDCommonToolsSwift {
                     complete(.authorized)
                 case .provisional:
                     complete (.authorized)
-                @unknown default:
+                default:
                     complete(.authorized)
                 }
             }
+        }
+    }
+}
+
+extension ZXKitUtil: CLLocationManagerDelegate {
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        guard let locationComplete = locationComplete  else { return }
+        switch status {
+            case .notDetermined:
+                locationComplete(.notDetermined)
+            case .restricted:
+                locationComplete(.restricted)
+            case .denied:
+                locationComplete(.denied)
+            case .authorizedAlways:
+                locationComplete(.authorized)
+            case .authorizedWhenInUse:
+                locationComplete(.authorized)
+            default:
+                locationComplete(.authorized)
+        }
+    }
+
+    @available(iOS 14.0, *)
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        guard let locationComplete = locationComplete  else { return }
+        switch manager.authorizationStatus {
+            case .notDetermined:
+                locationComplete(.notDetermined)
+            case .restricted:
+                locationComplete(.restricted)
+            case .denied:
+                locationComplete(.denied)
+            case .authorizedAlways:
+                locationComplete(.authorized)
+            case .authorizedWhenInUse:
+                locationComplete(.authorized)
+            default:
+                locationComplete(.authorized)
         }
     }
 }

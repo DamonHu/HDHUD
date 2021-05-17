@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name = 'HDHUD'
 s.swift_version = '5.0'
-s.version = '1.2.3'
+s.version = '1.2.4'
 s.license= { :type => "MIT", :file => "LICENSE" }
 s.summary = 'A simple and efficient HUD based on swift development'
 s.homepage = 'https://github.com/DamonHu/HDHUD'
@@ -17,7 +17,7 @@ s.resource_bundles = {
 s.frameworks = 'UIKit'
 s.documentation_url = 'https://github.com/DamonHu/HDHUD'
 
-s.dependency 'HDCommonToolsSwift'
+s.dependency 'ZXKitUtil'
 s.dependency 'SnapKit'
 s.dependency 'Kingfisher'
 end

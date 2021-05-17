@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import HDCommonToolsSwift
+import ZXKitUtil
 
 public enum HDHUDIconType {
     case none
@@ -45,12 +45,12 @@ open class HDHUD {
     public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImageURL = URL(fileURLWithPath: URLPathHDBoundle(named: "loading.gif"))
     public static var loadingImageSize = CGSize(width: 48, height: 48)
-    public static var backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
-    public static var textColor = UIColor(hexValue: 0xFFFFFF)
+    public static var backgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.8)
+    public static var textColor = UIColor.zx.color(hexValue: 0xFFFFFF)
     public static var textFont = UIFont.systemFont(ofSize: 16)
     public static var contentOffset = CGPoint.zero
-    public static var progressTintColor = UIColor(hexValue: 0xFF8F0C)
-    public static var trackTintColor = UIColor(hexValue: 0xFFFFFF)
+    public static var progressTintColor = UIColor.zx.color(hexValue: 0xFF8F0C)
+    public static var trackTintColor = UIColor.zx.color(hexValue: 0xFFFFFF)
     //Display form when loading and toast appear at the same time
     public static var loadingPriority = HDHUDLoadingPriority.high
 
@@ -225,7 +225,7 @@ private extension HDHUD {
         //show new view
         var tmpSuperView = superView
         if tmpSuperView == nil {
-            tmpSuperView = HDCommonToolsSwift.shared.getCurrentNormalWindow()
+            tmpSuperView = ZXKitUtil.shared.getCurrentNormalWindow()
         }
         guard let tSuperView = tmpSuperView else { return }
 

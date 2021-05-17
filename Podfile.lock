@@ -1,26 +1,26 @@
 PODS:
-  - HDCommonToolsSwift (2.0.0)
-  - Kingfisher (5.15.6):
-    - Kingfisher/Core (= 5.15.6)
-  - Kingfisher/Core (5.15.6)
+  - Kingfisher (6.3.0)
   - SnapKit (5.0.1)
+  - ZXKitUtil (0.1.0):
+    - ZXKitUtil/core (= 0.1.0)
+  - ZXKitUtil/core (0.1.0)
 
 DEPENDENCIES:
-  - HDCommonToolsSwift
   - Kingfisher
   - SnapKit
+  - ZXKitUtil
 
 SPEC REPOS:
   trunk:
-    - HDCommonToolsSwift
     - Kingfisher
     - SnapKit
+    - ZXKitUtil
 
 SPEC CHECKSUMS:
-  HDCommonToolsSwift: e1c5b60993b07e6d50fc3f54023a5d9267a273a5
-  Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
+  Kingfisher: 6c3df386db71d82c0817a429d2c9421a77396529
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  ZXKitUtil: a374e2c80d5274c5e2d97f42bad5597a8812be89
 
-PODFILE CHECKSUM: 79184152240b4a7a3570b64efa6b4ffa1182bc72
+PODFILE CHECKSUM: 8ae0a6f8d3827615dcca9424b7ed1974f6148193
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1
