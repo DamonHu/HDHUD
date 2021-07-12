@@ -22,14 +22,20 @@ public enum HDHUDContentDirection {
     case horizontal
 }
 
-///当页面正在展示toast，此时再调用显示模式，会根据优先级的设置进行展示。
-///low： 已有toast在显示的情况下，该条提示不显示
-///overlay: 该提示和之前的toast同时叠加显示
-///high：关闭toast，展示当前要显示的toast
-///When the page is displaying toast, the loading display is called, and it will be displayed according to the priority setting.
-///Low: loading is not displayed, only toast is displayed
-///Common: loading and toast are superimposed at the same time
-///High: close toast and show loading
+/**当页面正在展示toast，此时再调用显示模式，会根据优先级的设置进行展示。
+
+ low： 已有toast在显示的情况下，该条提示不显示
+ overlay: 该提示和当前在展示的toast同时叠加显示
+ high：关闭当前在展示的toast，展示当前要显示的toast
+ sequence: 当前展示的toast结束之后，展示本条即将显示的toast
+
+ When the toast is being displayed on the page, the display mode will be called at this time to display according to the priority setting.
+
+ low: this prompt will not be displayed when a toast is already displayed
+ overlay: the prompt is superimposed with the toast currently displayed
+ high: close the toast currently displayed and display the toast to be displayed
+ sequence: display the toast to be displayed after the toast currently displayed
+*/
 public enum HDHUDPriority {
     case low
     case overlay
