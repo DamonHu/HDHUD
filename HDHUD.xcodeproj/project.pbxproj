@@ -22,6 +22,7 @@
 		E4461BFA25384D0E00B6BA35 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BF925384D0E00B6BA35 /* CircularProgressView.swift */; };
 		E4461BFD25384D2600B6BA35 /* HDHUDProgressContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BFC25384D2600B6BA35 /* HDHUDProgressContentView.swift */; };
 		E45AFA19255523C10029F2D4 /* ic_tip_close_button@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45AFA18255523C00029F2D4 /* ic_tip_close_button@3x.png */; };
+		E4ADD4C0269C8141000BD07F /* HDHUDTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4ADD4BF269C8141000BD07F /* HDHUDTask.swift */; };
 		E5E05A9553A7FD5A0E00B3BE /* Pods_HDHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDF8C11D407B63CE14726CAD /* Pods_HDHUD.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		E4461BF925384D0E00B6BA35 /* CircularProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		E4461BFC25384D2600B6BA35 /* HDHUDProgressContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDHUDProgressContentView.swift; sourceTree = "<group>"; };
 		E45AFA18255523C00029F2D4 /* ic_tip_close_button@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_tip_close_button@3x.png"; sourceTree = "<group>"; };
+		E4ADD4BF269C8141000BD07F /* HDHUDTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDHUDTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 				E4461BD225382B2900B6BA35 /* HDHUDContentView.swift */,
 				E4461BF425383A4600B6BA35 /* HDHUDLabelContentView.swift */,
 				E4461BFC25384D2600B6BA35 /* HDHUDProgressContentView.swift */,
+				E4ADD4BF269C8141000BD07F /* HDHUDTask.swift */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			files = (
 				E4461BFD25384D2600B6BA35 /* HDHUDProgressContentView.swift in Sources */,
 				E4461BD325382B2900B6BA35 /* HDHUDContentView.swift in Sources */,
+				E4ADD4C0269C8141000BD07F /* HDHUDTask.swift in Sources */,
 				E4461BB72538296400B6BA35 /* ViewController.swift in Sources */,
 				E4461BB32538296400B6BA35 /* AppDelegate.swift in Sources */,
 				E4461BD625382B3800B6BA35 /* HDHUD.swift in Sources */,

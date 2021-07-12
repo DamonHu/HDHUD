@@ -27,65 +27,63 @@ class ViewController: UIViewController {
 
     @objc func p_click() {
         print("点击")
-
+        let priority = HDHUDPriority.sequence
+        
         if i == 0 {
-            HDHUD.show("横版排列", icon: .none, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .none, direction: .horizontal, priority: priority)
         }
         if i == 1 {
-            HDHUD.show("横版排列", icon: .warn, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .warn, direction: .horizontal, priority: priority)
         }
         if i == 2 {
-            HDHUD.show("横版排列", icon: .error, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .error, direction: .horizontal, priority: priority)
         }
         if i == 3 {
-            HDHUD.show("横版排列", icon: .success, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .success, direction: .horizontal, priority: priority)
         }
         if i == 4 {
-            HDHUD.show("横版排列", icon: .loading, direction: .horizontal)
+            HDHUD.show("横版排列", icon: .loading, direction: .horizontal, priority: priority)
         }
 
         if i == 5 {
-            HDHUD.show("竖版排列", icon: .none, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .none, direction: .vertical, priority: priority)
         }
         if i == 6 {
-            HDHUD.show("竖版排列", icon: .warn, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .warn, direction: .vertical, priority: priority)
         }
         if i == 7 {
-            HDHUD.show("竖版排列", icon: .error, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
         }
         if i == 8 {
-            HDHUD.show("竖版排列", icon: .success, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .success, direction: .vertical, priority: priority)
         }
         if i == 9 {
-            HDHUD.show("竖版排列", icon: .loading, direction: .vertical)
+            HDHUD.show("竖版排列", icon: .loading, direction: .vertical, priority: priority)
         }
         if i == 10 {
-            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical, userInteractionOnUnderlyingViewsEnabled: false)
+            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical, priority: priority)
         }
         if i == 11 {
-            HDHUD.show(commonView: mCustomView)
+            HDHUD.show(commonView: mCustomView, priority: priority)
         }
 
         if i == 12 {
-            HDHUD.show(commonView: mCustomView2)
+            HDHUD.show(commonView: mCustomView2, priority: priority)
         }
         if i == 13 {
-            HDHUD.showProgress(0.1, direction: .vertical)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                HDHUD.showProgress(0.3, direction: .vertical)
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                HDHUD.showProgress(0.5, direction: .vertical)
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                HDHUD.showProgress(0.6, direction: .vertical)
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                HDHUD.showProgress(0.9, direction: .vertical)
-            }
+            HDHUD.showProgress(0.1, direction: .vertical, priority: priority)
+        }
+        if i == 14 {
+            HDHUD.showProgress(0.3, direction: .vertical, priority: priority)
+        }
+        if i == 15 {
+            HDHUD.showProgress(0.5, direction: .vertical, priority: priority)
+        }
+        if i == 16 {
+            HDHUD.showProgress(0.6, direction: .vertical, priority: priority)
+        }
+        if i == 17 {
+            HDHUD.showProgress(0.9, direction: .vertical, priority: priority)
         }
         i = i+1
     }
