@@ -60,7 +60,7 @@ class ViewController: UIViewController {
             HDHUD.show("竖版排列", icon: .loading, direction: .vertical)
         }
         if i == 10 {
-            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical)
+            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical, userInteractionOnUnderlyingViewsEnabled: false)
         }
         if i == 11 {
             HDHUD.show(commonView: mCustomView)

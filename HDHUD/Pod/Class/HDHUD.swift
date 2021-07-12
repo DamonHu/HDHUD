@@ -22,18 +22,19 @@ public enum HDHUDContentDirection {
     case horizontal
 }
 
-///当页面正在展示toast，此时调用loading显示，会根据优先级的设置进行展示。
-///low： loading不显示，只显示toast
-///common: loading和toast同时叠加显示
-///high：关闭toast，展示loading
+///当页面正在展示toast，此时再调用显示模式，会根据优先级的设置进行展示。
+///low： 已有toast在显示的情况下，该条提示不显示
+///overlay: 该提示和之前的toast同时叠加显示
+///high：关闭toast，展示当前要显示的toast
 ///When the page is displaying toast, the loading display is called, and it will be displayed according to the priority setting.
 ///Low: loading is not displayed, only toast is displayed
 ///Common: loading and toast are superimposed at the same time
 ///High: close toast and show loading
-public enum HDHUDLoadingPriority {
+public enum HDHUDPriority {
     case low
-    case common
+    case overlay
     case high
+    case sequence
 }
 
 open class HDHUD {
@@ -59,12 +60,9 @@ open class HDHUD {
     public static var contentOffset = CGPoint.zero
     public static var progressTintColor = UIColor.zx.color(hexValue: 0xFF8F0C)
     public static var trackTintColor = UIColor.zx.color(hexValue: 0xFFFFFF)
-    //Display form when loading and toast appear at the same time
-    public static var loadingPriority = HDHUDLoadingPriority.high
 
     //private members
-    private static var mCurrentIconType: HDHUDIconType?
-    private static var mNextIconType = HDHUDIconType.none
+    private static var prevIconType: HDHUDIconType?
     private static let bgView = UIView()
     private static var mTimer: Timer? = nil
 }
@@ -82,7 +80,7 @@ public extension HDHUD {
     ///   - superView: the upper view of the HUD, the default is the current window
     ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
     ///   - completion: callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
-    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
+    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority, completion: (()->Void)? = nil) {
         if Thread.isMainThread {
             self._show(content, icon: icon, direction: direction, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, completion: completion)
         } else {
@@ -123,21 +121,20 @@ public extension HDHUD {
     }
 }
 
-//MARK: Private Method
-
+///MARK: Private Method
 private extension HDHUD {
     static func _show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, completion: (()->Void)? = nil) {
-        //下次即将显示的toast
-        mNextIconType = icon
         //根据下次即将显示的类型进行清理
-        //remove last view
-        if self.mNextIconType == .loading, let currentIconType = mCurrentIconType, currentIconType != .loading {
+        if icon == .loading, let prevIconType = prevIconType, prevIconType != .loading {
             switch self.loadingPriority {
                 case .low:
+                    //当前有显示，下次即将显示loading，忽略掉
                     return
                 case .common:
+                    //重叠显示
                     break
                 case .high:
+                    //优先显示
                     HDHUD.hide()
             }
         } else {
