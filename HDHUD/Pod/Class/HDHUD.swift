@@ -111,9 +111,9 @@ public extension HDHUD {
 
     //display customview
     @discardableResult
-    static func show(commonView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) -> HDHUDTask {
+    static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: commonView, completion: completion)
+        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: customView, completion: completion)
         self.show(task: task)
         return task
     }
@@ -258,7 +258,6 @@ private extension HDHUD {
             prevTask = nil
         }
         //判断是否有未展示序列
-        print(sequenceTask.count)
         if let task = sequenceTask.first {
             sequenceTask.removeFirst()
             if task.taskType == .progress {

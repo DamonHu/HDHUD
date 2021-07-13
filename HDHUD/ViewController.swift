@@ -12,6 +12,7 @@ var i = 0
 
 class ViewController: UIViewController {
 
+    var task: HDHUDTask?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +45,6 @@ class ViewController: UIViewController {
         if i == 4 {
             HDHUD.show("横版排列", icon: .loading, direction: .horizontal, priority: priority)
         }
-
         if i == 5 {
             HDHUD.show("竖版排列", icon: .none, direction: .vertical, priority: priority)
         }
@@ -55,20 +55,21 @@ class ViewController: UIViewController {
             HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
         }
         if i == 8 {
-            HDHUD.show("竖版排列", icon: .success, direction: .vertical, priority: priority)
+            task = HDHUD.show("竖版排列11111", icon: .success, direction: .vertical, priority: priority)
         }
         if i == 9 {
-            HDHUD.show("竖版排列", icon: .loading, direction: .vertical, priority: priority)
+            HDHUD.hide(task: task)
+            HDHUD.show("竖版排列22222", icon: .loading, direction: .vertical, priority: priority)
         }
         if i == 10 {
             HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical, priority: priority)
         }
         if i == 11 {
-            HDHUD.show(commonView: mCustomView, priority: priority)
+            HDHUD.show(customView: mCustomView, priority: priority)
         }
 
         if i == 12 {
-            HDHUD.show(commonView: mCustomView2, priority: priority)
+            HDHUD.show(customView: mCustomView2, priority: priority)
         }
         if i == 13 {
             HDHUD.showProgress(0.1, direction: .vertical, priority: priority)

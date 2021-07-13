@@ -117,10 +117,19 @@ lazy var mCustomView: UIView = {
 }()
 
 //show
-HDHUD.show(commonView: mCustomView)
+HDHUD.show(customView: mCustomView)
 ```
 
-### 3.4, general settings
+
+### 3.4, Remove the hud will be displayed in the sequence
+
+```
+let task = HDHUD.show("竖版排列11111", icon: .success, direction: .vertical, priority: . sequence)
+
+HDHUD.hide(task: task)
+```
+
+### 3.5, general settings
 
 More parameters can be set for personalized use
 
@@ -129,9 +138,15 @@ More parameters can be set for personalized use
 * `superView` specifies the upper view of the HUD, the default is the current window
 * `userInteractionOnUnderlyingViewsEnabled`  whether the bottom view responds when the hud pops up
 * `completion` callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
+*  `priority` When the toast is being displayed on the page, the display mode will be called at this time to display according to the priority setting.
+  - `low`: this prompt will not be displayed when a toast is already displayed
+  - `overlay`: the prompt is superimposed with the toast currently displayed
+  - `high`: close the toast currently displayed and display the toast to be displayed
+  - `sequence`: display the toast to be displayed after the toast currently displayed
+
 
 ```
-HDHUD.show("Text Information", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true) {
+HDHUD.show("Text Information", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true, priority: .high) {
        //Automatically closed callback
 }
 ```
@@ -159,9 +174,9 @@ HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
 
 ## 一、效果图
 
-![](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
+![](https://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
 
-效果图不显示的话可以点击该链接进行查看：[http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
+效果图不显示的话可以点击该链接进行查看：[https://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
 
 ## 二、特点
 
@@ -172,6 +187,8 @@ HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
 * 进度条展示
 * loading展示
 * 自适应文本大小
+*  多个弹窗序列展示、重叠展示、优先级展示
+*  指定关闭序列内未展示的弹窗
 
 ### 支持使用`cocoapods`集成
 
@@ -238,7 +255,7 @@ HDHUD.hide()
 预留了展示自定义view的功能，可以展示自己写的view
 
 ```
-HDHUD.show(view: customView)
+HDHUD.show(customView: customView)
 ```
 
 注意：自己的view需要设置大小的约束，可以使用`SnapKit`设置，例如
@@ -271,8 +288,15 @@ lazy var mCustomView: UIView = {
 HDHUD.show(commonView: mCustomView)
 ```
 
+### 3.4、移除序列中即将显示的弹层
 
-### 3.4、通用设置
+```
+let task = HDHUD.show("竖版排列11111", icon: .success, direction: .vertical, priority: . sequence)
+
+HDHUD.hide(task: task)
+```
+
+### 3.5、通用设置
 
 可以设置更多参数进行个性化使用
 
@@ -281,9 +305,15 @@ HDHUD.show(commonView: mCustomView)
 * `superView` 指定HUD的上层View，默认为当前的window
 * `userInteractionOnUnderlyingViewsEnabled` HUD弹出之后，底部view是否响应点击
 * `completion` 自动关闭之后的回调，如果`duration`设置为-1，不会进行调用
+*  `priority` 当页面正在展示toast，此时再调用显示模式，会根据优先级的设置进行展示。
+  -  `low`： 已有toast在显示的情况下，该条提示不显示
+  -  `overlay`: 该提示和当前在展示的toast同时叠加显示
+  -  `high`：关闭当前在展示的toast，展示当前要显示的toast
+  -  `sequence`: 当前展示的toast结束之后，展示本条即将显示的toast
+
 
 ```
-HDHUD.show("文本信息", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true) {
+HDHUD.show("文本信息", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true, priority: .high) {
        //自动关闭的回调
 }
 ```
