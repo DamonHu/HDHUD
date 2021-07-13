@@ -14,15 +14,28 @@ public enum HDHUDTaskType {
     case custom
 }
 
-public struct HDHUDTask {
+open class HDHUDTask: NSObject {
     public var taskType = HDHUDTaskType.text
-    public var content: String?
-    public var icon = HDHUDIconType.none
-    public var direction = HDHUDContentDirection.horizontal
     public var duration: TimeInterval = 2.5
     public var superView: UIView?
     public var userInteractionOnUnderlyingViewsEnabled = true
     public var priority = HDHUDPriority.high
+    public var contentView: UIView = UIView()
+    public var completion: (()->Void)? = nil
+
+    init(taskType: HDHUDTaskType = .text, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, contentView: UIView = UIView(), completion: (()->Void)? = nil) {
+
+        self.taskType = taskType
+        self.duration = duration
+        self.superView = superView
+        self.userInteractionOnUnderlyingViewsEnabled = userInteractionOnUnderlyingViewsEnabled
+        self.priority = priority
+        self.contentView = contentView
+        self.completion = completion
+        super.init()
+    }
+}
+
+open class HDHUDProgressTask: HDHUDTask {
     public var progress: Float = 0
-    public var commonView: UIView = UIView()
 }

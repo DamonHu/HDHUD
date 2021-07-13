@@ -11,7 +11,7 @@ import SnapKit
 class HDHUDContentView: UIView {
     init() {
         super.init(frame: .zero)
-        self.backgroundColor = HDHUD.backgroundColor
+        self.backgroundColor = HDHUD.contentBackgroundColor
         self.layer.cornerRadius = 8
     }
 

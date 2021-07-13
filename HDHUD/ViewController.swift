@@ -26,8 +26,8 @@ class ViewController: UIViewController {
     }
 
     @objc func p_click() {
-        print("点击")
-        let priority = HDHUDPriority.sequence
+        print("点击", i)
+        let priority = HDHUDPriority.high
         
         if i == 0 {
             HDHUD.show("横版排列", icon: .none, direction: .horizontal, priority: priority)
@@ -84,6 +84,12 @@ class ViewController: UIViewController {
         }
         if i == 17 {
             HDHUD.showProgress(0.9, direction: .vertical, priority: priority)
+        }
+        if i == 18 {
+            HDHUD.show("竖版排列", icon: .success, direction: .vertical, priority: priority)
+        }
+        if i == 19 {
+            HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
         }
         i = i+1
     }

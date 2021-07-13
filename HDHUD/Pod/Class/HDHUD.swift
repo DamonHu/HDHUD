@@ -88,42 +88,62 @@ public extension HDHUD {
     ///   - superView: the upper view of the HUD, the default is the current window
     ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
     ///   - completion: callback after the HUD is automatically closed, if `duration` is set to -1, it will not be called
-    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) {
+    @discardableResult
+    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) -> HDHUDTask {
+        //显示的页面
+        let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
+        //创建任务
+        let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: contentView, completion: completion)
+        //展示
+        self.show(task: task)
+        return task
+    }
+
+    //display progress hud
+    @discardableResult
+    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high) -> HDHUDProgressTask {
+        let contentView = HDHUDProgressContentView(direction: direction)
+        let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: contentView, completion: nil)
+        task.progress = progress
+        self.show(task: task)
+        return task
+    }
+
+    //display customview
+    @discardableResult
+    static func show(commonView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) -> HDHUDTask {
+        //创建任务
+        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: commonView, completion: completion)
+        self.show(task: task)
+        return task
+    }
+
+    //display use task
+    static func show(task: HDHUDTask) {
+        //展示
         if Thread.isMainThread {
-            self._show(content, icon: icon, direction: direction, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, completion: completion)
+            if task.taskType == .progress {
+                self._showProgress(task: task as! HDHUDProgressTask)
+            } else {
+                self._show(task: task)
+            }
         } else {
             DispatchQueue.main.async {
-                self._show(content, icon: icon, direction: direction, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, completion: completion)
+                if task.taskType == .progress {
+                    self._showProgress(task: task as! HDHUDProgressTask)
+                } else {
+                    self._show(task: task)
+                }
             }
         }
     }
 
-    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high) {
+    static func hide(task: HDHUDTask? = nil) {
         if Thread.isMainThread {
-            self._showProgress(progress, direction: direction, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled,  priority: priority)
+            self._hide(task: task)
         } else {
             DispatchQueue.main.async {
-                self._showProgress(progress, direction: direction, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled,  priority: priority)
-            }
-        }
-    }
-    
-    static func show(commonView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) {
-        if Thread.isMainThread {
-            self._show(commonView: commonView, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, completion: completion)
-        } else {
-            DispatchQueue.main.async {
-                self._show(commonView: commonView, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, completion: completion)
-            }
-        }
-    }
-
-    static func hide(type: HDHUDIconType? = nil) {
-        if Thread.isMainThread {
-            self._hide(type: type)
-        } else {
-            DispatchQueue.main.async {
-                self._hide(type: type)
+                self._hide(task: task)
             }
         }
     }
@@ -131,12 +151,10 @@ public extension HDHUD {
 
 ///MARK: Private Method
 private extension HDHUD {
-    static func _show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) {
-        //当前任务
-        let task = HDHUDTask(taskType: .text, content: content, icon: icon, direction: direction, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority)
+    static func _show(task: HDHUDTask) {
         //根据下次即将显示的类型进行清理
         if prevTask != nil {
-            switch priority {
+            switch task.priority {
             case .low:
                 //当前有显示，忽略掉不显示
                 return
@@ -145,7 +163,6 @@ private extension HDHUD {
                 break
             case .high:
                 //直接显示
-                self.sequenceTask.removeAll()
                 HDHUD.hide()
             case .sequence:
                 //添加到序列
@@ -153,20 +170,19 @@ private extension HDHUD {
                 return
             }
         }
-        let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
-        bgView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-        self._showView(view: contentView, superView: superView)
-        self._addPopAnimation(view: contentView)
+        bgView.isUserInteractionEnabled = !task.userInteractionOnUnderlyingViewsEnabled
+        self._showView(view: task.contentView, superView: task.superView)
+        self._addPopAnimation(view: task.contentView)
         //设置当前正在显示的hud类型
         prevTask = task
-        if duration > 0 {
+        if task.duration > 0 {
             if mTimer != nil {
                 mTimer?.invalidate()
                 mTimer = nil
             }
-            mTimer = Timer(fire: Date(timeIntervalSinceNow: duration), interval: 0, repeats: false) { (timer) in
-                HDHUD.hide()
-                if let completion = completion {
+            mTimer = Timer(fire: Date(timeIntervalSinceNow: task.duration), interval: 0, repeats: false) { (timer) in
+                HDHUD.hide(task: task)
+                if let completion = task.completion {
                     completion()
                 }
             }
@@ -174,17 +190,14 @@ private extension HDHUD {
         }
     }
     
-    static func _showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high) {
-        let task = HDHUDTask(taskType: .progress, direction: direction, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, progress: progress)
-        
-        if let progressContentView = bgView.subviews.first as? HDHUDProgressContentView {
-            progressContentView.progress = progress
+    static func _showProgress(task: HDHUDProgressTask) {
+        //当前正在显示的就是进度条，直接更新进度
+        if let prevTask = prevTask, prevTask.taskType == .progress {
+            let contentView = prevTask.contentView as! HDHUDProgressContentView
+            contentView.progress = task.progress
         } else {
-            let contentView = HDHUDProgressContentView(direction: direction)
-            contentView.progress = progress
-            
             if prevTask != nil {
-                switch priority {
+                switch task.priority {
                 case .low:
                     //当前有显示，忽略掉不显示
                     return
@@ -202,54 +215,38 @@ private extension HDHUD {
                 }
             }
             
-            bgView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-            self._showView(view: contentView, superView: superView)
-            self._addPopAnimation(view: contentView)
+            bgView.isUserInteractionEnabled = !task.userInteractionOnUnderlyingViewsEnabled
+            let contentView = task.contentView as! HDHUDProgressContentView
+            contentView.progress = task.progress
+            self._showView(view: contentView, superView: task.superView)
+            self._addPopAnimation(view: task.contentView)
             prevTask = task
         }
-    }
-    
-    static func _show(commonView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, completion: (()->Void)? = nil) {
-        
-        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, commonView: commonView)
-        
-        if prevTask != nil {
-            switch priority {
-            case .low:
-                //当前有显示，忽略掉不显示
-                return
-            case .overlay:
-                //重叠显示
-                break
-            case .high:
-                //直接显示
-                self.sequenceTask.removeAll()
-                HDHUD.hide()
-            case .sequence:
-                //添加到序列，稍后再显示
-                self.sequenceTask.append(task)
-                return
+        //如果序列中还有其他类型，就延迟移除显示其他待显示task
+        if sequenceTask.count > 0 {
+            if mTimer != nil {
+                mTimer?.invalidate()
+                mTimer = nil
             }
-        }
-        bgView.isUserInteractionEnabled = !userInteractionOnUnderlyingViewsEnabled
-        self._showView(view: commonView, superView: superView)
-        self._addPopAnimation(view: commonView)
-        prevTask = task
-        
-        if duration > 0 {
-            mTimer = Timer(fire: Date(timeIntervalSinceNow: duration), interval: 0, repeats: false) { (timer) in
-                HDHUD.hide()
-                if let completion = completion {
-                    completion()
-                }
+            mTimer = Timer(fire: Date(timeIntervalSinceNow: 2.5), interval: 0, repeats: false) { (timer) in
+                HDHUD.hide(task: prevTask)
             }
             RunLoop.main.add(mTimer!, forMode: .common)
         }
     }
     
-    static func _hide(type: HDHUDIconType? = nil) {
-        if type == nil || type == prevTask?.icon {
-            //没有指定隐藏类型，或者隐藏类型和当前显示类型一致才销毁
+    static func _hide(task: HDHUDTask? = nil) {
+        if let task = task, self.sequenceTask.contains(task) {
+            //特定类型未展示的情况，移出序列
+            if let index = self.sequenceTask.firstIndex(of: task) {
+                self.sequenceTask.remove(at: index)
+            }
+        }
+        if task == nil || task == prevTask {
+            if task == nil {
+                //未指定特定类型，则移除所有序列
+                self.sequenceTask.removeAll()
+            }
             if mTimer != nil {
                 mTimer?.invalidate()
                 mTimer = nil
@@ -264,13 +261,10 @@ private extension HDHUD {
         print(sequenceTask.count)
         if let task = sequenceTask.first {
             sequenceTask.removeFirst()
-            switch task.taskType {
-            case .text:
-                self.show(task.content, icon: task.icon, direction: task.direction, duration: task.duration, superView: task.superView, userInteractionOnUnderlyingViewsEnabled: task.userInteractionOnUnderlyingViewsEnabled, priority: task.priority, completion: nil)
-            case .progress:
-                self.showProgress(task.progress, direction: task.direction, superView: task.superView, userInteractionOnUnderlyingViewsEnabled: task.userInteractionOnUnderlyingViewsEnabled, priority: task.priority)
-            case .custom:
-                self.show(commonView: task.commonView, duration: task.duration, superView: task.superView, userInteractionOnUnderlyingViewsEnabled: task.userInteractionOnUnderlyingViewsEnabled, priority: task.priority, completion: nil)
+            if task.taskType == .progress {
+                self._showProgress(task: task as! HDHUDProgressTask)
+            } else {
+                self._show(task: task)
             }
         }
     }
