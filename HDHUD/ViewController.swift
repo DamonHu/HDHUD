@@ -12,7 +12,7 @@ var i = 0
 
 class ViewController: UIViewController {
 
-    var task: HDHUDTask?
+    var task: HDHUDProgressTask?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,10 +55,9 @@ class ViewController: UIViewController {
             HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
         }
         if i == 8 {
-            task = HDHUD.show("竖版排列11111", icon: .success, direction: .vertical, priority: priority)
+            HDHUD.show("竖版排列11111", icon: .success, direction: .vertical, priority: .sequence)
         }
         if i == 9 {
-            HDHUD.hide(task: task)
             HDHUD.show("竖版排列22222", icon: .loading, direction: .vertical, priority: priority)
         }
         if i == 10 {
@@ -72,24 +71,27 @@ class ViewController: UIViewController {
             HDHUD.show(customView: mCustomView2, priority: priority)
         }
         if i == 13 {
-            HDHUD.showProgress(0.1, direction: .vertical, priority: priority)
+            task = HDHUD.showProgress(0.1, direction: .vertical, priority: priority)
         }
         if i == 14 {
-            HDHUD.showProgress(0.3, direction: .vertical, priority: priority)
+            task?.progress = 0.3
         }
         if i == 15 {
-            HDHUD.showProgress(0.5, direction: .vertical, priority: priority)
+            task?.progress = 0.5
         }
         if i == 16 {
-            HDHUD.showProgress(0.6, direction: .vertical, priority: priority)
+            task?.progress = 0.6
         }
         if i == 17 {
             HDHUD.showProgress(0.9, direction: .vertical, priority: priority)
         }
         if i == 18 {
-            HDHUD.show("竖版排列", icon: .success, direction: .vertical, priority: priority)
+            HDHUD.hide()
         }
         if i == 19 {
+            HDHUD.show("竖版排列", icon: .success, direction: .vertical, priority: priority)
+        }
+        if i == 20 {
             HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
         }
         i = i+1
