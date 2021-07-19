@@ -27,7 +27,7 @@ public enum HDHUDContentDirection {
 
  low： 已有toast在显示的情况下，该条提示不显示
  overlay: 该提示和当前在展示的toast同时叠加显示
- high：关闭当前在展示的toast，展示当前要显示的toast
+ high：关闭当前在展示的toast，立即展示当前要显示的toast
  sequence: 当前展示的toast结束之后，展示本条即将显示的toast
 
  When the toast is being displayed on the page, the display mode will be called at this time to display according to the priority setting.
@@ -162,8 +162,8 @@ private extension HDHUD {
                 //重叠显示
                 break
             case .high:
-                //直接显示
-                HDHUD.hide()
+                //移除当前显示
+                self._hide(task: prevTask, autoNext: false)
             case .sequence:
                 //添加到序列
                 self.sequenceTask.append(task)
@@ -181,10 +181,11 @@ private extension HDHUD {
                 mTimer = nil
             }
             mTimer = Timer(fire: Date(timeIntervalSinceNow: task.duration), interval: 0, repeats: false) { (timer) in
-                HDHUD.hide(task: task)
                 if let completion = task.completion {
                     completion()
                 }
+                //自动关闭当前显示
+                self._hide(task: task, autoNext: true)
             }
             RunLoop.main.add(mTimer!, forMode: .common)
         }
@@ -206,8 +207,7 @@ private extension HDHUD {
                     break
                 case .high:
                     //直接显示
-                    self.sequenceTask.removeAll()
-                    HDHUD.hide()
+                    self._hide(task: prevTask, autoNext: false)
                 case .sequence:
                     //添加到序列，稍后再显示
                     self.sequenceTask.append(task)
@@ -222,31 +222,15 @@ private extension HDHUD {
             self._addPopAnimation(view: task.contentView)
             prevTask = task
         }
-        //如果序列中还有其他类型，就延迟移除显示其他待显示task
-        if sequenceTask.count > 0 {
-            if mTimer != nil {
-                mTimer?.invalidate()
-                mTimer = nil
-            }
-            mTimer = Timer(fire: Date(timeIntervalSinceNow: 2.5), interval: 0, repeats: false) { (timer) in
-                HDHUD.hide(task: prevTask)
-            }
-            RunLoop.main.add(mTimer!, forMode: .common)
-        }
     }
     
-    static func _hide(task: HDHUDTask? = nil) {
+    static func _hide(task: HDHUDTask? = nil, autoNext: Bool = true) {
         if let task = task, self.sequenceTask.contains(task) {
             //特定类型未展示的情况，移出序列
             if let index = self.sequenceTask.firstIndex(of: task) {
                 self.sequenceTask.remove(at: index)
             }
-        }
-        if task == nil || task == prevTask {
-            if task == nil {
-                //未指定特定类型，则移除所有序列
-                self.sequenceTask.removeAll()
-            }
+        } else {
             if mTimer != nil {
                 mTimer?.invalidate()
                 mTimer = nil
@@ -257,13 +241,12 @@ private extension HDHUD {
             bgView.removeFromSuperview()
             prevTask = nil
         }
-        //判断是否有未展示序列
-        if let task = sequenceTask.first {
+        if autoNext, let prepareTask = sequenceTask.first {
             sequenceTask.removeFirst()
-            if task.taskType == .progress {
-                self._showProgress(task: task as! HDHUDProgressTask)
+            if prepareTask.taskType == .progress {
+                self._showProgress(task: prepareTask as! HDHUDProgressTask)
             } else {
-                self._show(task: task)
+                self._show(task: prepareTask)
             }
         }
     }

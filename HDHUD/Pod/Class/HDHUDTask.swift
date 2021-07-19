@@ -37,5 +37,11 @@ open class HDHUDTask: NSObject {
 }
 
 open class HDHUDProgressTask: HDHUDTask {
-    public var progress: Float = 0
+    public var progress: Float = 0 {
+        willSet {
+            if let contentView = self.contentView as? HDHUDProgressContentView {
+                contentView.progress = newValue
+            }
+        }
+    }
 }
