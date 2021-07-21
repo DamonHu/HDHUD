@@ -185,9 +185,7 @@ After importing, set `HDHUD.loadingImageURL`. If `loadingImageURL` is set, the U
 
 ## 一、效果图
 
-![](https://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
-
-效果图不显示的话可以点击该链接进行查看：[https://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif](http://cdn.hudongdong.com/usr/uploads/2020/10/418197018.gif)
+![](./demo.gif)
 
 ## 二、特点
 
