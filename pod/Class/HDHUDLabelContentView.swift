@@ -53,7 +53,11 @@ extension HDHUDLabelContentView {
                 imageSize = HDHUD.successImageSize
             case .loading:
                 #if canImport(Kingfisher)
-                mImageView.kf.setImage(with: HDHUD.loadingImageURL)
+                if let url = HDHUD.loadingImageURL {
+                    mImageView.kf.setImage(with: url)
+                } else {
+                    mImageView.image = HDHUD.loadingImage
+                }
                 #else
                 mImageView.image = HDHUD.loadingImage
                 #endif
