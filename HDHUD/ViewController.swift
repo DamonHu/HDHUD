@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     @objc func p_click() {
         print("点击", i)
         let priority = HDHUDPriority.high
-        
+
         if i == 0 {
             HDHUD.show("横版排列", icon: .none, direction: .horizontal, priority: priority)
         }

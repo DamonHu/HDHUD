@@ -20,8 +20,8 @@ class HDHUDLabelContentView: HDHUDContentView {
     }
 
     //MARK: UI
-    lazy var mImageView: UIImageView = {
-        let tImageView = UIImageView()
+    lazy var mImageView: AnimatedImageView = {
+        let tImageView = AnimatedImageView()
         return tImageView
     }()
     lazy var mLabel: UILabel = {
