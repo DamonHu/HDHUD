@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Kingfisher
+import SwiftyGif
 
 class HDHUDLabelContentView: HDHUDContentView {
 
@@ -24,6 +24,7 @@ class HDHUDLabelContentView: HDHUDContentView {
         let tImageView = UIImageView()
         return tImageView
     }()
+
     lazy var mLabel: UILabel = {
         let tLabel = UILabel()
         tLabel.numberOfLines = 0
@@ -34,7 +35,7 @@ class HDHUDLabelContentView: HDHUDContentView {
     }()
 }
 
-extension HDHUDLabelContentView {
+private extension HDHUDLabelContentView {
     func createUI(content: String?, icon: HDHUDIconType, direction: HDHUDContentDirection) {
         var imageSize = CGSize.zero
         switch icon {
@@ -50,7 +51,7 @@ extension HDHUDLabelContentView {
                 mImageView.image = HDHUD.successImage
                 imageSize = HDHUD.successImageSize
             case .loading:
-                mImageView.kf.setImage(with: HDHUD.loadingImageURL)
+                mImageView.setGifFromURL(HDHUD.loadingImageURL)
                 imageSize = HDHUD.loadingImageSize
         }
         mLabel.text = content
@@ -90,6 +91,8 @@ extension HDHUDLabelContentView {
                 make.top.equalToSuperview().offset(15)
             }
         }
+
+
 
         mLabel.snp.makeConstraints { (make) in
             if direction == .horizontal {

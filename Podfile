@@ -8,5 +8,5 @@ target 'HDHUD' do
   # Pods for HDHUD
   pod 'SnapKit'
   pod 'ZXKitUtil'
-  pod 'Kingfisher'
+  pod 'SwiftyGif'
 end

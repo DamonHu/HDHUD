@@ -1,4 +1,4 @@
 ${PODS_ROOT}/Target Support Files/Pods-HDHUD/Pods-HDHUD-frameworks.sh
-${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
+${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework
 ${BUILT_PRODUCTS_DIR}/ZXKitUtil/ZXKitUtil.framework

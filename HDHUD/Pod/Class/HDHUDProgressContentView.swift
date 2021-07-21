@@ -7,6 +7,7 @@
 
 import UIKit
 import ZXKitUtil
+import SwiftyGif
 
 class HDHUDProgressContentView: HDHUDContentView {
     var progress: Float = 0 {
@@ -28,7 +29,7 @@ class HDHUDProgressContentView: HDHUDContentView {
     //MARK: UI
     lazy var mImageView: UIImageView = {
         let tImageView = UIImageView()
-        tImageView.kf.setImage(with: HDHUD.loadingImageURL)
+        tImageView.setGifFromURL(HDHUD.loadingImageURL)
         return tImageView
     }()
 
