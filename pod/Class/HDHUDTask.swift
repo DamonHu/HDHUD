@@ -21,9 +21,10 @@ open class HDHUDTask: NSObject {
     public var userInteractionOnUnderlyingViewsEnabled = true
     public var priority = HDHUDPriority.high
     public var contentView: UIView = UIView()
+    public var didAppear: (()->Void)? = nil
     public var completion: (()->Void)? = nil
 
-    init(taskType: HDHUDTaskType = .text, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, contentView: UIView = UIView(), completion: (()->Void)? = nil) {
+    init(taskType: HDHUDTaskType = .text, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, contentView: UIView = UIView(), didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) {
 
         self.taskType = taskType
         self.duration = duration
@@ -31,6 +32,7 @@ open class HDHUDTask: NSObject {
         self.userInteractionOnUnderlyingViewsEnabled = userInteractionOnUnderlyingViewsEnabled
         self.priority = priority
         self.contentView = contentView
+        self.didAppear = didAppear
         self.completion = completion
         super.init()
     }
