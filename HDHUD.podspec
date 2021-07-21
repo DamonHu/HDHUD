@@ -9,14 +9,19 @@ s.authors = { 'DamonHu' => 'dong765@qq.com' }
 s.source = { :git => "https://github.com/DamonHu/HDHUD.git", :tag => s.version}
 s.requires_arc = true
 s.ios.deployment_target = '10.0'
-s.source_files = "HDHUD/Pod/Class/*.swift"
-s.resource_bundles = {
-  'HDHUD' => ['HDHUD/Pod/Assets/*.png', 'HDHUD/Pod/Assets/*.gif']
-}
+s.subspec 'core' do |cs|
+  cs.resource_bundles = {
+    'HDHUD' => ['pod/Assets/*.png','pod/Assets/**/*.png', 'HDHUD/Pod/Assets/*.gif']
+  }
+  cs.source_files = "pod/Class/*.swift"
+  cs.dependency 'SnapKit'
+  cs.dependency 'ZXKitUtil'
+end
+s.subspec 'gif' do |cs|
+    cs.dependency 'HDHUD/core'
+    cs.dependency 'Kingfisher'
+end
+s.default_subspec = "core"
 s.frameworks = 'UIKit'
 s.documentation_url = 'https://github.com/DamonHu/HDHUD'
-
-s.dependency 'ZXKitUtil'
-s.dependency 'SnapKit'
-s.dependency 'Kingfisher'
 end

@@ -1,0 +1,22 @@
+PODS:
+  - SnapKit (5.0.1)
+  - ZXKitUtil (3.0.1):
+    - ZXKitUtil/core (= 3.0.1)
+  - ZXKitUtil/core (3.0.1)
+
+DEPENDENCIES:
+  - SnapKit
+  - ZXKitUtil
+
+SPEC REPOS:
+  trunk:
+    - SnapKit
+    - ZXKitUtil
+
+SPEC CHECKSUMS:
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  ZXKitUtil: 7f8782b19f1696fe259d07f4048196be5f2ea6b7
+
+PODFILE CHECKSUM: 798621f128a699de832b2770e0bf5ae0b5b50f50
+
+COCOAPODS: 1.9.1
