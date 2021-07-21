@@ -57,7 +57,7 @@ open class HDHUD {
     #if canImport(Kingfisher)
     //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
     // If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
-    public static var loadingImageURL = URL(fileURLWithPath: URLPathHDBoundle(named: "loading.gif")!)
+    public static var loadingImageURL: URL? = URL(fileURLWithPath: URLPathHDBoundle(named: "loading.gif") ?? "")
     #endif
     ///color and text
     public static var contentBackgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.8)
