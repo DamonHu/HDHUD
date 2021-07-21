@@ -1,26 +1,26 @@
 PODS:
+  - Kingfisher (6.3.0)
   - SnapKit (5.0.1)
-  - SwiftyGif (5.4.0)
-  - ZXKitUtil (3.0.1):
-    - ZXKitUtil/core (= 3.0.1)
-  - ZXKitUtil/core (3.0.1)
+  - ZXKitUtil (0.1.0):
+    - ZXKitUtil/core (= 0.1.0)
+  - ZXKitUtil/core (0.1.0)
 
 DEPENDENCIES:
+  - Kingfisher
   - SnapKit
-  - SwiftyGif
   - ZXKitUtil
 
 SPEC REPOS:
   trunk:
+    - Kingfisher
     - SnapKit
-    - SwiftyGif
     - ZXKitUtil
 
 SPEC CHECKSUMS:
+  Kingfisher: 6c3df386db71d82c0817a429d2c9421a77396529
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwiftyGif: 5d4af95df24caf1c570dbbcb32a3b8a0763bc6d7
-  ZXKitUtil: 7f8782b19f1696fe259d07f4048196be5f2ea6b7
+  ZXKitUtil: a374e2c80d5274c5e2d97f42bad5597a8812be89
 
-PODFILE CHECKSUM: c53aa6d1dbeed3b0ce47c9a634d1729af2432548
+PODFILE CHECKSUM: 8ae0a6f8d3827615dcca9424b7ed1974f6148193
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1
