@@ -160,6 +160,7 @@ HDHUD.errorImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_error@3x.
 HDHUD.errorImageSize = CGSize(width: 24, height: 24)
 HDHUD.successImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_success@3x.png"))
 HDHUD.successImageSize = CGSize(width: 24, height: 24)
+HDHUD.loadingImage = UIImage.animatedImage(with: [UIImage(named: "loading1")!, UIImage(named: "loading2")!], duration: 0.6)
 HDHUD.loadingImageURL = URL(fileURLWithPath: UIImageHDBoundle(named: "loading.gif"))
 HDHUD.loadingImageSize = CGSize(width: 48, height: 48)
 HDHUD.backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
@@ -169,6 +170,16 @@ HDHUD.contentOffset = CGPoint.zero
 HDHUD.progressTintColor = UIColor(hexValue: 0xFF8F0C)
 HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
 ```
+
+### Loading picture settings
+
+The loading style can be set through the `loadingImage` to display the animation image array and interval, or through the 'GIF' image. If you use the 'GIF' image to set the animation image, you need to import it
+
+```
+pod "HDHUD/gif"
+```
+
+After importing, set `HDHUD.loadingImageURL`. If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
 
 <span id = "chinese"></span>
 
@@ -329,10 +340,22 @@ HDHUD.successImage = UIImage(contentsOfFile: UIImageHDBoundle(named: "ic_success
 HDHUD.successImageSize = CGSize(width: 24, height: 24)
 HDHUD.loadingImageURL = URL(fileURLWithPath: UIImageHDBoundle(named: "loading.gif"))
 HDHUD.loadingImageSize = CGSize(width: 48, height: 48)
+HDHUD.loadingImage = UIImage.animatedImage(with: [UIImage(named: "loading1")!, UIImage(named: "loading2")!], duration: 0.6)
 HDHUD.backgroundColor = UIColor(hexValue: 0x000000, alpha: 0.8)
 HDHUD.textColor = UIColor(hexValue: 0xFFFFFF)
 HDHUD.textFont = UIFont.systemFont(ofSize: 16)
 HDHUD.contentOffset = CGPoint.zero
 HDHUD.progressTintColor = UIColor(hexValue: 0xFF8F0C)
 HDHUD.trackTintColor = UIColor(hexValue: 0xFFFFFF)
+
 ```
+
+### loading图片设置
+
+`loading`样式可以通过`loadingImage`设置展示的动图图片数组和间隔，也可以通过`gif`图设置，如果使用`gif`图片设置动图的话，需要导入
+
+```
+pod "HDHUD/gif"
+```
+
+导入之后，设置`HDHUD.loadingImageURL`即可，如果设置了`loadingImageURL`，加载图片将会优先使用URL资源

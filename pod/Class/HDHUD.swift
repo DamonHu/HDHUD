@@ -53,11 +53,10 @@ open class HDHUD {
     public static var successImage = UIImageHDBoundle(named: "ic_success")
     public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImage = getLoadingImage()
-    public static var loadingAnimationDuration: TimeInterval = 0.6
     public static var loadingImageSize = CGSize(width: 48, height: 48)
     #if canImport(Kingfisher)
-    //如果设置了loadingImageURL，加载图片将会使用URL资源，loadingImage会失效
-    //If the loadingimageurl is set, the URL resource will be used to load the image, and the loadingimage will become invalid
+    //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
+    // If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
     public static var loadingImageURL = URL(fileURLWithPath: URLPathHDBoundle(named: "loading.gif")!)
     #endif
     ///color and text
@@ -332,6 +331,7 @@ private extension HDHUD {
                 imageList.append(image)
             }
         }
-        return UIImage.animatedImage(with: imageList, duration: loadingAnimationDuration)
+
+        return UIImage.animatedImage(with: imageList, duration: 0.6)
     }
 }
