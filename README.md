@@ -15,7 +15,6 @@ Use `cocoapods` for integration
 
 ```
 pod "HDHUD"
-
 ```
 
 ## Characteristics
