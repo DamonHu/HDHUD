@@ -257,19 +257,24 @@ private extension HDHUD {
                 completion()
             }
         } else {
-            //未指定，或者当前正在显示
-            if mTimer != nil {
-                mTimer?.invalidate()
-                mTimer = nil
+            //未指定，或者是正在显示task
+            if task == nil || task == prevTask {
+                if mTimer != nil {
+                    mTimer?.invalidate()
+                    mTimer = nil
+                }
+                for view in bgView.subviews {
+                    view.removeFromSuperview()
+                }
+                bgView.removeFromSuperview()
+                if let prev = prevTask, let completion = prev.completion {
+                    completion()
+                }
+                prevTask = nil
+            } else {
+                print("task invalid")
+                return
             }
-            for view in bgView.subviews {
-                view.removeFromSuperview()
-            }
-            bgView.removeFromSuperview()
-            if let prev = prevTask, let completion = prev.completion {
-                completion()
-            }
-            prevTask = nil
         }
         if autoNext, let prepareTask = sequenceTask.first {
             sequenceTask.removeFirst()
