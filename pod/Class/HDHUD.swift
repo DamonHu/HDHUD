@@ -224,6 +224,9 @@ private extension HDHUD {
             if prevTask != nil {
                 switch task.priority {
                 case .low:
+                    if let completion = task.completion {
+                        completion()
+                    }
                     //当前有显示，忽略掉不显示
                     return
                 case .overlay:
