@@ -146,10 +146,31 @@ public extension HDHUD {
 
     static func hide(task: HDHUDTask? = nil) {
         if Thread.isMainThread {
-            self._hide(task: task)
+            self._hide(task: task, autoNext: true)
         } else {
             DispatchQueue.main.async {
-                self._hide(task: task)
+                self._hide(task: task, autoNext: true)
+            }
+        }
+    }
+
+
+    /// clear and hide all HUDs, including undescending in the sequence
+    /// - Parameter completeValid: Whether to call back the task completion when the hud in the sequence is cleared
+    static func clearAll(completeValid: Bool = false) {
+        if completeValid {
+            for task in self.sequenceTask {
+                if let completion = task.completion {
+                    completion()
+                }
+            }
+        }
+        self.sequenceTask.removeAll()
+        if Thread.isMainThread {
+            self._hide(task: nil, autoNext: false)
+        } else {
+            DispatchQueue.main.async {
+                self._hide(task: nil, autoNext: false)
             }
         }
     }
@@ -163,6 +184,9 @@ private extension HDHUD {
             switch task.priority {
             case .low:
                 //当前有显示，忽略掉不显示
+                if let completion = task.completion {
+                    completion()
+                }
                 return
             case .overlay:
                 //重叠显示
@@ -221,26 +245,16 @@ private extension HDHUD {
     }
     
     static func _hide(task: HDHUDTask? = nil, autoNext: Bool = true) {
-        if let task = task, let completion = task.completion {
-            completion()
-        } else {
-            //销毁全部
-            if let prev = prevTask, let completion = prev.completion {
-                completion()
-            }
-            for task in self.sequenceTask {
-                if let completion = task.completion {
-                    completion()
-                }
-            }
-        }
-
         if let task = task, self.sequenceTask.contains(task) {
-            //特定类型未展示的情况，移出序列
+            //还在序列中未展示的任务
             if let index = self.sequenceTask.firstIndex(of: task) {
                 self.sequenceTask.remove(at: index)
             }
+            if let completion = task.completion {
+                completion()
+            }
         } else {
+            //未指定，或者当前正在显示
             if mTimer != nil {
                 mTimer?.invalidate()
                 mTimer = nil
@@ -249,6 +263,9 @@ private extension HDHUD {
                 view.removeFromSuperview()
             }
             bgView.removeFromSuperview()
+            if let prev = prevTask, let completion = prev.completion {
+                completion()
+            }
             prevTask = nil
         }
         if autoNext, let prepareTask = sequenceTask.first {

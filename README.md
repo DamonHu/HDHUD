@@ -141,13 +141,25 @@ HDHUD.show(commonView: mCustomView)
 
 ## HUD hide
 
+**NOTE: If there are other HUDs in the sequence to be displayed, the next HUD will be displayed**
+
 ```
-//Hide all HUD
+//Hide current HUD
 HDHUD.hide()
 
 //Hides the specified HUD
 let task = HDHUD.show("竖版排列")
 HDHUD.hide(task: task)
+```
+
+## Clear all HUDs, including those not shown in the sequence
+
+```
+//Clear all HUDs. Completevalid sets Whether to call back the task completion when the hud in the sequence is cleared
+static func clearAll(completeValid: Bool = false) {}
+
+//for example
+HDHUD.clearAll()
 ```
 
 ## Custom configuration
