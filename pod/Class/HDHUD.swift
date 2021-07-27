@@ -300,8 +300,22 @@ private extension HDHUD {
         bgView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-
         bgView.insertSubview(view, at: 0)
+        if task.duration < 0 {
+            let button = UIButton(type: .custom)
+            button.backgroundColor = HDHUD.contentBackgroundColor
+            button.layer.masksToBounds = true
+            button.layer.cornerRadius = 8
+            button.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
+            button.addTarget(self, action: #selector(_onClickCloseButton), for: .touchUpInside)
+            self._addPopAnimation(view: button)
+            tSuperView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.centerX.equalTo(view.snp.right).offset(-2)
+                make.centerY.equalTo(view.snp.top).offset(2)
+                make.width.height.equalTo(16)
+            }
+        }
 
         if view.frame.size.width > 0 || view.frame.size.height > 0 {
             view.snp.remakeConstraints { (make) in
@@ -345,6 +359,10 @@ private extension HDHUD {
         group.fillMode = CAMediaTimingFillMode.forwards
         group.animations = [scaleAnimation, opacityAnimation]
         view.layer.add(group, forKey: "scale")
+    }
+
+    @objc static func _onClickCloseButton() {
+        HDHUD.hide()
     }
 }
 
