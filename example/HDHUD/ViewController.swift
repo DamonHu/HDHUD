@@ -89,7 +89,7 @@ class ViewController: UIViewController {
             HDHUD.hide(task: task)
         }
         if i == 19 {
-            HDHUD.show("竖版排列", icon: .success, direction: .vertical, priority: priority)
+            HDHUD.show("竖版排列", icon: .success, direction: .vertical, duration: -1, priority: priority)
         }
         if i == 20 {
             HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
