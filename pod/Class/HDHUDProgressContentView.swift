@@ -33,12 +33,12 @@ class HDHUDProgressContentView: HDHUDContentView {
         let tImageView = UIImageView()
         #if canImport(Kingfisher)
         if let url = HDHUD.loadingImageURL {
-            mImageView.kf.setImage(with: url)
+            tImageView.kf.setImage(with: url)
         } else {
-            mImageView.image = HDHUD.loadingImage
+            tImageView.image = HDHUD.loadingImage
         }
         #else
-        mImageView.image = HDHUD.loadingImage
+        tImageView.image = HDHUD.loadingImage
         #endif
         return tImageView
     }()
