@@ -71,7 +71,7 @@ open class HDHUD {
     public static var contentOffset = CGPoint.zero
     public static var progressTintColor = UIColor.zx.color(hexValue: 0xFF8F0C)
     public static var trackTintColor = UIColor.zx.color(hexValue: 0xFFFFFF)
-
+    public static var autoAddCloseButton = true
     //private members
     private static var prevTask: HDHUDTask?
     private static var sequenceTask = [HDHUDTask]()
@@ -301,7 +301,7 @@ private extension HDHUD {
             make.edges.equalToSuperview()
         }
         bgView.insertSubview(view, at: 0)
-        if task.duration < 0 {
+        if autoAddCloseButton && task.duration < 0 {
             let button = UIButton(type: .custom)
             button.backgroundColor = HDHUD.contentBackgroundColor
             button.layer.masksToBounds = true

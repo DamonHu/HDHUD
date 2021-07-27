@@ -203,7 +203,19 @@ In particular, the `loading` icon uses the `image ` by default, and the loop mod
 pod "HDHUD/gif"
 ```
 
-After importing, set `HDHUD.loadingImageURL`. If 'loadingimageurl' is set, the URL resource will be used preferentially when loading images
+After importing, set `HDHUD.loadingImageURL`. If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
+
+## Hide button
+
+![](./demo.png)
+
+When the `duration` of HUD is set to `-1`, HUD will always be displayed. In order to prevent the occurrence of logical bugs which will affect the user's operation. When the `duration` is - 1, a close button will be added in the upper right corner by default, which allows the user to decide whether to close the HUD. If you do not need this function, you can set `autoaddclosebutton` to false
+
+```
+HDHUD.autoaddclosebutton = false
+```
+
+
 
 ## Project
 
