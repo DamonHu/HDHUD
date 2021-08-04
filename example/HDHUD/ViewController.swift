@@ -31,13 +31,13 @@ class ViewController: UIViewController {
         let priority = HDHUDPriority.high
         
         if i == 0 {
-            HDHUD.show("横版排列", icon: .none, direction: .horizontal, priority: priority)
+            HDHUD.show("横版排列", icon: .none, direction: .horizontal,  duration: -1, priority: priority)
         }
         if i == 1 {
-            HDHUD.show("横版排列", icon: .warn, direction: .horizontal, priority: priority)
+            HDHUD.show("横版排列", icon: .warn, direction: .horizontal, duration: -1, priority: priority)
         }
         if i == 2 {
-            HDHUD.show("横版排列", icon: .error, direction: .horizontal, priority: priority)
+            HDHUD.show("横版排列", icon: .error, direction: .horizontal, duration: -1, priority: priority)
         }
         if i == 3 {
             HDHUD.show("横版排列", icon: .success, direction: .horizontal, priority: priority)

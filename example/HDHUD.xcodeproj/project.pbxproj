@@ -36,13 +36,13 @@
 		E4240F1126A80B37000014A4 /* ic_success@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4240EF226A80B36000014A4 /* ic_success@3x.png */; };
 		E4240F1226A80B37000014A4 /* ic_warning@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4240EF326A80B36000014A4 /* ic_warning@3x.png */; };
 		E4240F1326A80B37000014A4 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = E4240EF426A80B36000014A4 /* loading.gif */; };
-		E4240F1426A80B37000014A4 /* ic_tip_close_button@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4240EF526A80B36000014A4 /* ic_tip_close_button@3x.png */; };
 		E4240F1526A80B37000014A4 /* ic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4240EF626A80B36000014A4 /* ic_error@3x.png */; };
 		E4461BB32538296400B6BA35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BB22538296400B6BA35 /* AppDelegate.swift */; };
 		E4461BB72538296400B6BA35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4461BB62538296400B6BA35 /* ViewController.swift */; };
 		E4461BBA2538296400B6BA35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4461BB82538296400B6BA35 /* Main.storyboard */; };
 		E4461BBC2538296600B6BA35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4461BBB2538296600B6BA35 /* Assets.xcassets */; };
 		E4461BBF2538296600B6BA35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4461BBD2538296600B6BA35 /* LaunchScreen.storyboard */; };
+		E4ADD75626BAD410000BD07F /* icon_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4ADD75526BAD410000BD07F /* icon_close@3x.png */; };
 		E5E05A9553A7FD5A0E00B3BE /* Pods_HDHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDF8C11D407B63CE14726CAD /* Pods_HDHUD.framework */; };
 /* End PBXBuildFile section */
 
@@ -79,7 +79,6 @@
 		E4240EF226A80B36000014A4 /* ic_success@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_success@3x.png"; sourceTree = "<group>"; };
 		E4240EF326A80B36000014A4 /* ic_warning@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_warning@3x.png"; sourceTree = "<group>"; };
 		E4240EF426A80B36000014A4 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
-		E4240EF526A80B36000014A4 /* ic_tip_close_button@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_tip_close_button@3x.png"; sourceTree = "<group>"; };
 		E4240EF626A80B36000014A4 /* ic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_error@3x.png"; sourceTree = "<group>"; };
 		E4461BAF2538296400B6BA35 /* HDHUD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDHUD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4461BB22538296400B6BA35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +87,7 @@
 		E4461BBB2538296600B6BA35 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E4461BBE2538296600B6BA35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E4461BC02538296600B6BA35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E4ADD75526BAD410000BD07F /* icon_close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_close@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,11 +145,11 @@
 		E4240EDC26A80B36000014A4 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				E4ADD75526BAD410000BD07F /* icon_close@3x.png */,
 				E4240EDD26A80B36000014A4 /* loading */,
 				E4240EF226A80B36000014A4 /* ic_success@3x.png */,
 				E4240EF326A80B36000014A4 /* ic_warning@3x.png */,
 				E4240EF426A80B36000014A4 /* loading.gif */,
-				E4240EF526A80B36000014A4 /* ic_tip_close_button@3x.png */,
 				E4240EF626A80B36000014A4 /* ic_error@3x.png */,
 			);
 			path = Assets;
@@ -274,7 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4461BBF2538296600B6BA35 /* LaunchScreen.storyboard in Resources */,
-				E4240F1426A80B37000014A4 /* ic_tip_close_button@3x.png in Resources */,
+				E4ADD75626BAD410000BD07F /* icon_close@3x.png in Resources */,
 				E4461BBC2538296600B6BA35 /* Assets.xcassets in Resources */,
 				E4240F0A26A80B37000014A4 /* loading_6.png in Resources */,
 				E4240F1126A80B37000014A4 /* ic_success@3x.png in Resources */,

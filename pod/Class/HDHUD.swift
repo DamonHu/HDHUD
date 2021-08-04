@@ -44,6 +44,20 @@ public enum HDHUDPriority {
     case sequence
 }
 
+func UIImageHDBoundle(named: String?) -> UIImage? {
+    guard let name = named else { return nil }
+    guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: "bundle") else { return UIImage(named: name) }
+    let bundle = Bundle(path: bundlePath)
+    return UIImage(named: name, in: bundle, compatibleWith: nil)
+}
+
+func URLPathHDBoundle(named: String?) -> String? {
+    guard let name = named else { return "" }
+    guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: "bundle") else { return Bundle.main.path(forResource: name, ofType: "") }
+    let filePath = Bundle(path: bundlePath)?.path(forResource: name, ofType: "")
+    return filePath
+}
+
 open class HDHUD {
     ///images
     public static var warnImage = UIImageHDBoundle(named: "ic_warning")
@@ -63,7 +77,7 @@ open class HDHUD {
     public static var contentBackgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.8)
     public static var backgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.3) {
         willSet {
-            self.bgView.backgroundColor = newValue
+            self.shared.bgView.backgroundColor = newValue
         }
     }
     public static var textColor = UIColor.zx.color(hexValue: 0xFFFFFF)
@@ -75,7 +89,17 @@ open class HDHUD {
     //private members
     private static var prevTask: HDHUDTask?
     private static var sequenceTask = [HDHUDTask]()
-    private static let bgView = UIView()
+    private let bgView = UIView()
+    private lazy var closeButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = HDHUD.contentBackgroundColor
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 8
+        button.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
+        button.addTarget(self, action: #selector(_onClickCloseButton), for: .touchUpInside)
+        return button
+    }()
+    static let shared = HDHUD()
     private static var mTimer: Timer? = nil
 }
 
@@ -263,10 +287,11 @@ private extension HDHUD {
                     mTimer?.invalidate()
                     mTimer = nil
                 }
-                for view in bgView.subviews {
+                for view in shared.bgView.subviews {
                     view.removeFromSuperview()
                 }
-                bgView.removeFromSuperview()
+                shared.bgView.removeFromSuperview()
+                shared.closeButton.removeFromSuperview()
                 if let prev = prevTask, let completion = prev.completion {
                     completion()
                 }
@@ -287,7 +312,7 @@ private extension HDHUD {
     }
 
     static func _showView(task: HDHUDTask) {
-        bgView.isUserInteractionEnabled = !task.userInteractionOnUnderlyingViewsEnabled
+        shared.bgView.isUserInteractionEnabled = !task.userInteractionOnUnderlyingViewsEnabled
         let view = task.contentView
         //show new view
         var tmpSuperView = task.superView
@@ -295,22 +320,16 @@ private extension HDHUD {
             tmpSuperView = ZXKitUtil.shared.getCurrentNormalWindow()
         }
         guard let tSuperView = tmpSuperView else { return }
-        bgView.backgroundColor = self.backgroundColor
-        tSuperView.addSubview(bgView)
-        bgView.snp.makeConstraints { (make) in
+        shared.bgView.backgroundColor = self.backgroundColor
+        tSuperView.addSubview(shared.bgView)
+        shared.bgView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-        bgView.insertSubview(view, at: 0)
+        shared.bgView.insertSubview(view, at: 0)
         if autoAddCloseButton && task.duration < 0 {
-            let button = UIButton(type: .custom)
-            button.backgroundColor = HDHUD.contentBackgroundColor
-            button.layer.masksToBounds = true
-            button.layer.cornerRadius = 8
-            button.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
-            button.addTarget(self, action: #selector(_onClickCloseButton), for: .touchUpInside)
-            self._addPopAnimation(view: button)
-            tSuperView.addSubview(button)
-            button.snp.makeConstraints { make in
+            self._addPopAnimation(view: shared.closeButton)
+            tSuperView.addSubview(shared.closeButton)
+            shared.closeButton.snp.makeConstraints { make in
                 make.centerX.equalTo(view.snp.right).offset(-2)
                 make.centerY.equalTo(view.snp.top).offset(2)
                 make.width.height.equalTo(16)
@@ -361,25 +380,13 @@ private extension HDHUD {
         view.layer.add(group, forKey: "scale")
     }
 
-    @objc static func _onClickCloseButton() {
+    @objc func _onClickCloseButton() {
         HDHUD.hide()
     }
 }
 
 private extension HDHUD {
-    static func UIImageHDBoundle(named: String?) -> UIImage? {
-        guard let name = named else { return nil }
-        guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: "bundle") else { return UIImage(named: name) }
-        let bundle = Bundle(path: bundlePath)
-        return UIImage(named: name, in: bundle, compatibleWith: nil)
-    }
-
-    static func URLPathHDBoundle(named: String?) -> String? {
-        guard let name = named else { return "" }
-        guard let bundlePath = Bundle(for: HDHUD.self).path(forResource: "HDHUD", ofType: "bundle") else { return Bundle.main.path(forResource: name, ofType: "") }
-        let filePath = Bundle(path: bundlePath)?.path(forResource: name, ofType: "")
-        return filePath
-    }
+    
 
     static func getLoadingImage() -> UIImage? {
         var imageList = [UIImage]()
