@@ -75,7 +75,7 @@ open class HDHUD {
     #endif
     ///color and text
     public static var contentBackgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.8)
-    public static var backgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.3) {
+    public static var backgroundColor = UIColor.zx.color(hexValue: 0x000000, alpha: 0.2) {
         willSet {
             self.shared.bgView.backgroundColor = newValue
         }
@@ -85,7 +85,7 @@ open class HDHUD {
     public static var contentOffset = CGPoint.zero
     public static var progressTintColor = UIColor.zx.color(hexValue: 0xFF8F0C)
     public static var trackTintColor = UIColor.zx.color(hexValue: 0xFFFFFF)
-    public static var autoAddCloseButton = true
+    public static var isShowCloseButton = true
     //private members
     private static var prevTask: HDHUDTask?
     private static var sequenceTask = [HDHUDTask]()
@@ -114,16 +114,16 @@ public extension HDHUD {
     ///   - direction: Layout direction of icon and text
     ///   - duration: specifies the time when the HUD is automatically turned off, `-1` means not to turn off automatically
     ///   - superView: the upper view of the HUD, the default is the current window
-    ///   - userInteractionOnUnderlyingViewsEnabled: whether the bottom view responds when the hud pops up
+    ///   - mask: whether the bottom view responds when the hud pops up
     ///   - priority:  When the toast is being displayed on the page, the display mode will be called at this time to display according to the priority setting.
     ///   - didAppear: callback after the HUD is appear
     ///   - completion: callback after the HUD is closed
     @discardableResult
-    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
+    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //显示的页面
         let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
         //创建任务
-        let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: contentView, didAppear: didAppear, completion: completion)
+        let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, mask: mask, priority: priority, contentView: contentView, didAppear: didAppear, completion: completion)
         //展示
         self.show(task: task)
         return task
@@ -131,9 +131,9 @@ public extension HDHUD {
 
     //display progress hud
     @discardableResult
-    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
+    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
         let contentView = HDHUDProgressContentView(direction: direction)
-        let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: contentView, didAppear: didAppear, completion: completion)
+        let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, mask: mask, priority: priority, contentView: contentView, didAppear: didAppear, completion: completion)
         task.progress = progress
         self.show(task: task)
         return task
@@ -141,9 +141,9 @@ public extension HDHUD {
 
     //display customview
     @discardableResult
-    static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
+    static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, userInteractionOnUnderlyingViewsEnabled: userInteractionOnUnderlyingViewsEnabled, priority: priority, contentView: customView, didAppear: didAppear, completion: completion)
+        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, mask: mask, priority: priority, contentView: customView, didAppear: didAppear, completion: completion)
         self.show(task: task)
         return task
     }
@@ -312,7 +312,8 @@ private extension HDHUD {
     }
 
     static func _showView(task: HDHUDTask) {
-        shared.bgView.isUserInteractionEnabled = !task.userInteractionOnUnderlyingViewsEnabled
+        //阻止点击
+        shared.bgView.isUserInteractionEnabled = task.mask
         let view = task.contentView
         //show new view
         var tmpSuperView = task.superView
@@ -326,7 +327,7 @@ private extension HDHUD {
             make.edges.equalToSuperview()
         }
         shared.bgView.insertSubview(view, at: 0)
-        if autoAddCloseButton && task.duration < 0 {
+        if isShowCloseButton && task.duration < 0 {
             self._addPopAnimation(view: shared.closeButton)
             tSuperView.addSubview(shared.closeButton)
             shared.closeButton.snp.makeConstraints { make in

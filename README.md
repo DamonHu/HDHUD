@@ -32,19 +32,19 @@ pod "HDHUD"
 
 ```
 //show HUD
-static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask
+static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask
 
 //show progress HUD
-static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask
+static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, mask: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask
 
 //show customview
-static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, userInteractionOnUnderlyingViewsEnabled: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask
+static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = true, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask
 ```
 
 Use the above function to call the display function. All parameters have default values. Different styles can be displayed through different parameters, such as the following
 
 ```
-HDHUD.show("Text Information", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, userInteractionOnUnderlyingViewsEnabled: true, priority: .high) {
+HDHUD.show("Text Information", icon: .warn, direction: .vertical, duration: 3.0, superView: self.view, mask: true, priority: .high) {
        //Automatically closed callback
 }
 
@@ -65,7 +65,7 @@ HDHUD.show(icon: .loading)
 
 `superView` Superview is the current 'window' by default. If you want to bind a 'VC' view, you can pass it in. In this way, it will be destroyed with the destruction of 'superview', and there will be no interface conflict
 
-`userInteractionOnUnderlyingViewsEnabled` whether the views below the shell layer can be clicked. When the shell layer appears, there will be a layer mask by default. You can choose whether the views below the mask respond to the click event
+`mask` whether the views below the shell layer can be clicked. When the shell layer appears, there will be a layer mask by default. You can choose whether the views below the mask respond to the click event
 
 `priority` This is a very convenient function for daily use. It provides the following four options
 
@@ -209,13 +209,16 @@ After importing, set `HDHUD.loadingImageURL`. If `loadingImageURL` is set, the U
 
 ![](./demo.png)
 
-When the `duration` of HUD is set to `-1`, HUD will always be displayed. In order to prevent the occurrence of logical bugs which will affect the user's operation. When the `duration` is - 1, a close button will be added in the upper right corner by default, which allows the user to decide whether to close the HUD. If you do not need this function, you can set `autoAddCloseButton` to false
+When the `duration` of HUD is set to `-1`, HUD will always be displayed. In order to prevent the occurrence of logical bugs which will affect the user's operation. When the `duration` is - 1, a close button will be added in the upper right corner by default, which allows the user to decide whether to close the HUD. If you do not need this function, you can set `isShowCloseButton` to false
 
 ```
-HDHUD.autoAddCloseButton = false
+HDHUD.isShowCloseButton = false
 ```
 
+## broken 1.3.6 -> 2.0.0
 
+* Modify `userInteractionOnUnderlyingViewsEnabled` to `mask`, which has the **opposite** meaning. `mask` means that the view below the mask layer does not support click response, and the default value is `false`
+* Modify `autoAddCloseButton` to `isShowCloseButton`
 
 ## Project
 
