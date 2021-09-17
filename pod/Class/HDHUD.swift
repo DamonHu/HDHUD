@@ -122,11 +122,18 @@ public extension HDHUD {
     static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
         let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        DispatchQueue.main.async {
+        if Thread.isMainThread {
             //显示的页面
             task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
             //展示
             self.show(task: task)
+        } else {
+            DispatchQueue.main.async {
+                //显示的页面
+                task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
+                //展示
+                self.show(task: task)
+            }
         }
         return task
     }
@@ -135,12 +142,20 @@ public extension HDHUD {
     @discardableResult
     static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
         let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        DispatchQueue.main.async {
+        if Thread.isMainThread {
             //显示的页面
             task.contentView = HDHUDProgressContentView(direction: direction)
             task.progress = progress
             //展示
             self.show(task: task)
+        } else {
+            DispatchQueue.main.async {
+                //显示的页面
+                task.contentView = HDHUDProgressContentView(direction: direction)
+                task.progress = progress
+                //展示
+                self.show(task: task)
+            }
         }
         return task
     }
@@ -150,11 +165,18 @@ public extension HDHUD {
     static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
         let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        DispatchQueue.main.async {
+        if Thread.isMainThread {
             //显示的页面
             task.contentView = customView
             //展示
             self.show(task: task)
+        } else {
+            DispatchQueue.main.async {
+                //显示的页面
+                task.contentView = customView
+                //展示
+                self.show(task: task)
+            }
         }
         return task
     }
