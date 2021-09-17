@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name = 'HDHUD'
 s.swift_version = '5.0'
-s.version = '2.0.0'
+s.version = '2.0.1'
 s.license= { :type => "MIT", :file => "LICENSE" }
 s.summary = 'A simple and efficient HUD based on swift development'
 s.homepage = 'https://github.com/DamonHu/HDHUD'

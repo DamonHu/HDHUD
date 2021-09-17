@@ -120,22 +120,28 @@ public extension HDHUD {
     ///   - completion: callback after the HUD is closed
     @discardableResult
     static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
-        //显示的页面
-        let contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
         //创建任务
-        let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, mask: mask, priority: priority, contentView: contentView, didAppear: didAppear, completion: completion)
-        //展示
-        self.show(task: task)
+        let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
+        DispatchQueue.main.async {
+            //显示的页面
+            task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
+            //展示
+            self.show(task: task)
+        }
         return task
     }
 
     //display progress hud
     @discardableResult
     static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
-        let contentView = HDHUDProgressContentView(direction: direction)
-        let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, mask: mask, priority: priority, contentView: contentView, didAppear: didAppear, completion: completion)
-        task.progress = progress
-        self.show(task: task)
+        let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
+        DispatchQueue.main.async {
+            //显示的页面
+            task.contentView = HDHUDProgressContentView(direction: direction)
+            task.progress = progress
+            //展示
+            self.show(task: task)
+        }
         return task
     }
 
@@ -143,8 +149,13 @@ public extension HDHUD {
     @discardableResult
     static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, mask: mask, priority: priority, contentView: customView, didAppear: didAppear, completion: completion)
-        self.show(task: task)
+        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
+        DispatchQueue.main.async {
+            //显示的页面
+            task.contentView = customView
+            //展示
+            self.show(task: task)
+        }
         return task
     }
 
@@ -312,9 +323,10 @@ private extension HDHUD {
     }
 
     static func _showView(task: HDHUDTask) {
+        assert(task.contentView != nil, "HDHUD contentView is nil")
+        guard let view = task.contentView else { return }
         //阻止点击
         shared.bgView.isUserInteractionEnabled = task.mask
-        let view = task.contentView
         //show new view
         var tmpSuperView = task.superView
         if tmpSuperView == nil {
@@ -358,7 +370,8 @@ private extension HDHUD {
         }
     }
 
-    static func _addPopAnimation(view: UIView) {
+    static func _addPopAnimation(view: UIView?) {
+        guard let view = view else { return }
         //动态弹出
         let scaleAnimation = CABasicAnimation(keyPath: "transform")
         scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(0, 0, 1))
@@ -387,8 +400,6 @@ private extension HDHUD {
 }
 
 private extension HDHUD {
-    
-
     static func getLoadingImage() -> UIImage? {
         var imageList = [UIImage]()
         for i in 0..<20 {

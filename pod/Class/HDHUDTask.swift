@@ -20,18 +20,16 @@ open class HDHUDTask: NSObject {
     public var superView: UIView?
     public var mask = false
     public var priority = HDHUDPriority.high
-    public var contentView: UIView = UIView()
+    public var contentView: UIView?
     public var didAppear: (()->Void)? = nil
     public var completion: (()->Void)? = nil
 
-    init(taskType: HDHUDTaskType = .text, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, contentView: UIView = UIView(), didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) {
-
+    init(taskType: HDHUDTaskType = .text, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) {
         self.taskType = taskType
         self.duration = duration
         self.superView = superView
         self.mask = mask
         self.priority = priority
-        self.contentView = contentView
         self.didAppear = didAppear
         self.completion = completion
         super.init()
