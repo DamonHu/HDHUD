@@ -122,18 +122,11 @@ public extension HDHUD {
     static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
         let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        if Thread.isMainThread {
+        ZXKitUtil.shared.runInMainThread(type: .sync) {
             //显示的页面
             task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
             //展示
             self.show(task: task)
-        } else {
-            DispatchQueue.main.async {
-                //显示的页面
-                task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
-                //展示
-                self.show(task: task)
-            }
         }
         return task
     }
@@ -142,20 +135,12 @@ public extension HDHUD {
     @discardableResult
     static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
         let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        if Thread.isMainThread {
+        ZXKitUtil.shared.runInMainThread(type: .sync) {
             //显示的页面
             task.contentView = HDHUDProgressContentView(direction: direction)
             task.progress = progress
             //展示
             self.show(task: task)
-        } else {
-            DispatchQueue.main.async {
-                //显示的页面
-                task.contentView = HDHUDProgressContentView(direction: direction)
-                task.progress = progress
-                //展示
-                self.show(task: task)
-            }
         }
         return task
     }
@@ -165,49 +150,29 @@ public extension HDHUD {
     static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
         let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        if Thread.isMainThread {
+        ZXKitUtil.shared.runInMainThread(type: .sync) {
             //显示的页面
             task.contentView = customView
             //展示
             self.show(task: task)
-        } else {
-            DispatchQueue.main.async {
-                //显示的页面
-                task.contentView = customView
-                //展示
-                self.show(task: task)
-            }
         }
         return task
     }
 
     //display use task
     static func show(task: HDHUDTask) {
-        //展示
-        if Thread.isMainThread {
+        ZXKitUtil.shared.runInMainThread(type: .sync) {
             if task.taskType == .progress {
                 self._showProgress(task: task as! HDHUDProgressTask)
             } else {
                 self._show(task: task)
             }
-        } else {
-            DispatchQueue.main.async {
-                if task.taskType == .progress {
-                    self._showProgress(task: task as! HDHUDProgressTask)
-                } else {
-                    self._show(task: task)
-                }
-            }
         }
     }
 
     static func hide(task: HDHUDTask? = nil) {
-        if Thread.isMainThread {
+        ZXKitUtil.shared.runInMainThread(type: .sync) {
             self._hide(task: task, autoNext: true)
-        } else {
-            DispatchQueue.main.async {
-                self._hide(task: task, autoNext: true)
-            }
         }
     }
 
@@ -223,12 +188,8 @@ public extension HDHUD {
             }
         }
         self.sequenceTask.removeAll()
-        if Thread.isMainThread {
+        ZXKitUtil.shared.runInMainThread(type: .sync) {
             self._hide(task: nil, autoNext: false)
-        } else {
-            DispatchQueue.main.async {
-                self._hide(task: nil, autoNext: false)
-            }
         }
     }
 }
@@ -362,7 +323,7 @@ private extension HDHUD {
         }
         shared.bgView.insertSubview(view, at: 0)
         if isShowCloseButton && task.duration < 0 {
-            self._addPopAnimation(view: shared.closeButton)
+            shared.closeButton.addPopAnimation()
             tSuperView.addSubview(shared.closeButton)
             shared.closeButton.snp.makeConstraints { make in
                 make.centerX.equalTo(view.snp.right).offset(-2)
@@ -384,36 +345,12 @@ private extension HDHUD {
                 make.centerY.equalToSuperview().offset(contentOffset.y)
             }
         }
-        self._addPopAnimation(view: task.contentView)
+        task.contentView?.addPopAnimation()
         prevTask = task
         //回调
         if let didAppear = task.didAppear {
             didAppear()
         }
-    }
-
-    static func _addPopAnimation(view: UIView?) {
-        guard let view = view else { return }
-        //动态弹出
-        let scaleAnimation = CABasicAnimation(keyPath: "transform")
-        scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(0, 0, 1))
-        scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1, 1, 1))
-        scaleAnimation.isCumulative = false
-        scaleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
-
-        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
-        opacityAnimation.fromValue = 0
-        opacityAnimation.toValue = 1
-        opacityAnimation.isCumulative = false
-        opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-
-        let group = CAAnimationGroup()
-        group.duration = 0.5
-        group.isRemovedOnCompletion = false
-        group.repeatCount = 1
-        group.fillMode = CAMediaTimingFillMode.forwards
-        group.animations = [scaleAnimation, opacityAnimation]
-        view.layer.add(group, forKey: "scale")
     }
 
     @objc func _onClickCloseButton() {
