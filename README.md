@@ -177,6 +177,7 @@ open class HDHUD {
     public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImage = getLoadingImage()
     public static var loadingImageSize = CGSize(width: 48, height: 48)
+    public static var isVibrate = false	//Whether it vibrates when displaying HUD
     #if canImport(Kingfisher)
     //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
     // If `loadingImageURL` is set, the URL resource will be used preferentially when loading images

@@ -67,7 +67,8 @@ open class HDHUD {
     public static var successImage = UIImageHDBoundle(named: "ic_success")
     public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImage = getLoadingImage()
-    public static var loadingImageSize = CGSize(width: 48, height: 48)
+    public static var loadingImageSize = CGSize(width: 38, height: 38)
+    public static var isVibrate = false
     #if canImport(Kingfisher)
     //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
     // If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
@@ -90,15 +91,6 @@ open class HDHUD {
     private static var prevTask: HDHUDTask?
     private static var sequenceTask = [HDHUDTask]()
     private let bgView = UIView()
-    private lazy var closeButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = HDHUD.contentBackgroundColor
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 8
-        button.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
-        button.addTarget(self, action: #selector(_onClickCloseButton), for: .touchUpInside)
-        return button
-    }()
     static let shared = HDHUD()
     private static var mTimer: Timer? = nil
 }
@@ -285,7 +277,7 @@ private extension HDHUD {
                     view.removeFromSuperview()
                 }
                 shared.bgView.removeFromSuperview()
-                shared.closeButton.removeFromSuperview()
+                task?.closeButton?.removeFromSuperview()
                 if let prev = prevTask, let completion = prev.completion {
                     completion()
                 }
@@ -322,13 +314,26 @@ private extension HDHUD {
             make.edges.equalToSuperview()
         }
         shared.bgView.insertSubview(view, at: 0)
+        //关闭按钮
         if isShowCloseButton && task.duration < 0 {
-            shared.closeButton.addPopAnimation()
-            tSuperView.addSubview(shared.closeButton)
-            shared.closeButton.snp.makeConstraints { make in
+            let closeButton = UIButton(type: .custom)
+            closeButton.isHidden = true
+            closeButton.backgroundColor = HDHUD.contentBackgroundColor
+            closeButton.layer.masksToBounds = true
+            closeButton.layer.cornerRadius = 8
+            closeButton.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
+            closeButton.addTarget(shared, action: #selector(_onClickCloseButton), for: .touchUpInside)
+            tSuperView.addSubview(closeButton)
+            closeButton.snp.makeConstraints { make in
                 make.centerX.equalTo(view.snp.right).offset(-2)
                 make.centerY.equalTo(view.snp.top).offset(2)
                 make.width.height.equalTo(16)
+            }
+            task.closeButton = closeButton
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                if let taskCloseButton = task.closeButton {
+                    taskCloseButton.isHidden = false
+                }
             }
         }
 
@@ -350,6 +355,11 @@ private extension HDHUD {
         //回调
         if let didAppear = task.didAppear {
             didAppear()
+        }
+        if HDHUD.isVibrate {
+            DispatchQueue.main.async {
+                ZXKitUtil.shared.startVibrate()
+            }
         }
     }
 

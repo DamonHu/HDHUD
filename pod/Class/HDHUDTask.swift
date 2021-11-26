@@ -15,14 +15,16 @@ public enum HDHUDTaskType {
 }
 
 open class HDHUDTask: NSObject {
-    public var taskType = HDHUDTaskType.text
-    public var duration: TimeInterval = 2.5
-    public var superView: UIView?
-    public var mask = false
-    public var priority = HDHUDPriority.high
-    public var contentView: UIView?
     public var didAppear: (()->Void)? = nil
     public var completion: (()->Void)? = nil
+
+    var mask = false
+    var priority = HDHUDPriority.high
+    var taskType = HDHUDTaskType.text
+    var duration: TimeInterval = 2.5
+    var contentView: UIView?
+    var closeButton: UIButton?
+    var superView: UIView?
 
     init(taskType: HDHUDTaskType = .text, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) {
         self.taskType = taskType
