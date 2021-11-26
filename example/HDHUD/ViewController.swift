@@ -28,6 +28,7 @@ class ViewController: UIViewController {
 
     @objc func p_click() {
         print("点击", i)
+        HDHUD.displayType = .tab
         let priority = HDHUDPriority.high
         
         if i == 0 {
