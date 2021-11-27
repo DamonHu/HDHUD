@@ -10,11 +10,11 @@ import SnapKit
 
 class ViewController: UIViewController {
     let titleLabel = ["displayPosition: top", "displayPosition: center", "displayPosition: bottom", "displayPosition: navigationBarMask", "displayPosition: tabBarMask"]
-    let dataList = [["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"]
+    let dataList = [["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading"]
     ]
     
     var task: HDHUDProgressTask?
@@ -133,15 +133,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         case 8:
             HDHUD.showProgress(0.6)
         case 9:
-            HDHUD.show(item, icon: .none, direction: .horizontal)
+            HDHUD.show(item, icon: .none, direction: .vertical)
         case 10:
-            HDHUD.show(item, icon: .warn, direction: .horizontal)
+            HDHUD.show(item, icon: .warn, direction: .vertical)
         case 11:
-            HDHUD.show(item, icon: .error, direction: .horizontal)
+            HDHUD.show(item, icon: .error, direction: .vertical)
         case 12:
-            HDHUD.show(item, icon: .success, direction: .horizontal)
+            HDHUD.show(item, icon: .success, direction: .vertical)
         case 13:
-            HDHUD.show(item, icon: .loading, direction: .horizontal)
+            HDHUD.show(item, icon: .loading, direction: .vertical)
         default:
             break
         }

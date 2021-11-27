@@ -446,7 +446,7 @@ private extension HDHUD {
                     view.snp.remakeConstraints { (make) in
                         make.centerX.equalToSuperview().offset(contentOffset.x)
                         make.bottom.equalToSuperview().offset(-ZXKitUtil_HomeIndicator_Height)
-                        make.top.equalTo(tabBarMaskView)
+                        make.top.equalTo(tabBarMaskView).offset(task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0)
                         make.width.equalTo(view.frame.size.width)
                         make.height.equalTo(view.frame.size.height)
                     }
@@ -454,7 +454,7 @@ private extension HDHUD {
                     view.snp.makeConstraints { (make) in
                         make.centerX.equalToSuperview().offset(contentOffset.x)
                         make.bottom.equalToSuperview().offset(-ZXKitUtil_HomeIndicator_Height)
-                        make.top.equalTo(tabBarMaskView)
+                        make.top.equalTo(tabBarMaskView).offset(task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0)
                     }
                 }
             } else {
