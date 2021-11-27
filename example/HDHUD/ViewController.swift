@@ -8,96 +8,24 @@
 import UIKit
 import SnapKit
 
-var i = 0
-
 class ViewController: UIViewController {
-
+    let titleLabel = ["displayPosition: top", "displayPosition: center", "displayPosition: bottom", "displayPosition: navigationBarMask", "displayPosition: tabBarMask"]
+    let dataList = [["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "横版纯文字", "横版警告", "横版错误", "横版成功", "横版加载loading"]
+    ]
+    
     var task: HDHUDProgressTask?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        self.view.backgroundColor = UIColor.green
-        let button = UIButton(type: .custom)
-        button.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
-        button.backgroundColor = UIColor.red
-        self.view.addSubview(button)
-        button.addTarget(self, action: #selector(p_click), for: .touchUpInside)
-
+        self.view.addSubview(mTableView)
+        mTableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
-
-    @objc func p_click() {
-        print("点击", i)
-        HDHUD.displayType = .tab
-        let priority = HDHUDPriority.high
-        
-        if i == 0 {
-            HDHUD.show("横版排列", icon: .none, direction: .horizontal,  duration: -1, priority: priority)
-        }
-        if i == 1 {
-            HDHUD.show("横版排列", icon: .warn, direction: .horizontal, duration: -1, priority: priority)
-        }
-        if i == 2 {
-            HDHUD.show("横版排列", icon: .error, direction: .horizontal, duration: -1, priority: priority)
-        }
-        if i == 3 {
-            HDHUD.show("横版排列", icon: .success, direction: .horizontal, priority: priority)
-        }
-        if i == 4 {
-            HDHUD.show("横版排列", icon: .loading, direction: .horizontal, priority: priority)
-        }
-        if i == 5 {
-            HDHUD.show("竖版排列", icon: .none, direction: .vertical, priority: priority)
-        }
-        if i == 6 {
-            HDHUD.show("竖版排列", icon: .warn, direction: .vertical, priority: priority)
-        }
-        if i == 7 {
-            HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
-        }
-        if i == 8 {
-            HDHUD.show("竖版排列11111", icon: .success, direction: .vertical, priority: .sequence)
-        }
-        if i == 9 {
-            HDHUD.show("竖版排列22222", icon: .loading, direction: .vertical, priority: priority)
-        }
-        if i == 10 {
-            HDHUD.show("自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行自动换行", icon: .success, direction: .vertical, priority: priority)
-        }
-        if i == 11 {
-            HDHUD.show(customView: mCustomView, priority: priority)
-        }
-
-        if i == 12 {
-            HDHUD.show(customView: mCustomView2, priority: priority)
-        }
-        if i == 13 {
-            task = HDHUD.showProgress(0.1, direction: .vertical, priority: priority)
-        }
-        if i == 14 {
-            task?.progress = 0.3
-        }
-        if i == 15 {
-            task?.progress = 0.5
-        }
-        if i == 16 {
-            task?.progress = 0.6
-        }
-        if i == 17 {
-            HDHUD.showProgress(0.9, direction: .vertical, priority: priority)
-        }
-        if i == 18 {
-            HDHUD.hide(task: task)
-        }
-        if i == 19 {
-            HDHUD.show("竖版排列", icon: .success, direction: .vertical, duration: -1, priority: priority)
-        }
-        if i == 20 {
-            HDHUD.show("竖版排列", icon: .error, direction: .vertical, priority: priority)
-        }
-        i = i+1
-    }
-
 
     //自定义视图
     lazy var mCustomView: UIView = {
@@ -116,4 +44,106 @@ class ViewController: UIViewController {
         }
         return view
     }()
+    
+    //MARK: UI
+    lazy var mTableView: UITableView = {
+        let tTableView = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)
+        if #available(iOS 15.0, *) {
+            tTableView.sectionHeaderTopPadding = 0
+        }
+        tTableView.rowHeight = 40
+        tTableView.backgroundColor = UIColor.clear
+        tTableView.showsVerticalScrollIndicator = false
+        tTableView.separatorStyle = .singleLine
+        tTableView.dataSource = self
+        tTableView.delegate = self
+        tTableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.zx.className())
+        return tTableView
+    }()
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return dataList.count
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let itemlist = dataList[section]
+        return itemlist.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let itemlist = dataList[indexPath.section]
+        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.zx.className())
+        cell?.textLabel?.text = itemlist[indexPath.row]
+        return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = UIColor.orange
+        let label = UILabel()
+        label.text = titleLabel[section]
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = UIColor.zx.color(hexValue: 0xffffff)
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(20)
+        }
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            HDHUD.displayPosition = .top
+        case 1:
+            HDHUD.displayPosition = .center
+        case 2:
+            HDHUD.displayPosition = .bottom
+        case 3:
+            HDHUD.displayPosition = .navigationBarMask
+        case 4:
+            HDHUD.displayPosition = .tabBarMask
+        default:
+            break
+        }
+        let item = dataList[indexPath.section][indexPath.row]
+        switch indexPath.row {
+        case 0:
+            HDHUD.show(item, icon: .none)
+        case 1:
+            HDHUD.show(item, icon: .none)
+        case 2:
+            HDHUD.show(item, icon: .warn)
+        case 3:
+            HDHUD.show(item, icon: .error)
+        case 4:
+            HDHUD.show(item, icon: .success)
+        case 5:
+            HDHUD.show(nil, icon: .loading)
+        case 6:
+            HDHUD.show(item, icon: .loading)
+        case 7:
+            HDHUD.showProgress(0.3)
+        case 8:
+            HDHUD.showProgress(0.6)
+        case 9:
+            HDHUD.show(item, icon: .none, direction: .horizontal)
+        case 10:
+            HDHUD.show(item, icon: .warn, direction: .horizontal)
+        case 11:
+            HDHUD.show(item, icon: .error, direction: .horizontal)
+        case 12:
+            HDHUD.show(item, icon: .success, direction: .horizontal)
+        case 13:
+            HDHUD.show(item, icon: .loading, direction: .horizontal)
+        default:
+            break
+        }
+    }
 }

@@ -73,7 +73,7 @@ extension HDHUDLabelContentView {
         }
 
         //判断单一存在的情况
-        guard content != nil else {
+        guard let content = content, !content.isEmpty else {
             self.snp.makeConstraints { (make) in
                 make.width.height.equalTo(100)
             }

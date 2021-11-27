@@ -21,10 +21,14 @@ public enum HDHUDContentDirection {
     case horizontal
 }
 
-public enum HDHUDDisplayMode {
-    case `default`
-    case navigation
-    case tab
+//
+public enum HDHUDDisplayPosition {
+    case top
+    case center
+    case bottom
+    
+    case navigationBarMask
+    case tabBarMask
 }
 
 /**当页面正在展示toast，此时再调用显示模式，会根据优先级的设置进行展示。
@@ -73,7 +77,7 @@ open class HDHUD {
     public static var loadingImage = getLoadingImage()
     public static var loadingImageSize = CGSize(width: 28, height: 28)
     public static var isVibrate = false
-    public static var displayType: HDHUDDisplayMode = .default
+    public static var displayPosition: HDHUDDisplayPosition = .center
     #if canImport(Kingfisher)
     //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
     // If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
@@ -307,7 +311,7 @@ private extension HDHUD {
         shared.bgView.isUserInteractionEnabled = task.mask
         //show new view
         var tmpSuperView = task.superView
-        if HDHUD.displayType == .navigation ||  HDHUD.displayType == .tab ||  tmpSuperView == nil {
+        if HDHUD.displayPosition == .navigationBarMask || HDHUD.displayPosition == .tabBarMask ||  HDHUD.displayPosition == .top ||  HDHUD.displayPosition == .bottom ||  tmpSuperView == nil {
             tmpSuperView = ZXKitUtil.shared.getCurrentNormalWindow()
         }
         guard let tSuperView = tmpSuperView else { return }
@@ -340,43 +344,68 @@ private extension HDHUD {
             }
         }
         //添加动画
-        switch HDHUD.displayType {
-            case .default:
-                //防止外层设置frame
+        if HDHUD.displayPosition == .center {
+            //防止外层设置frame
+            if view.frame.size.width > 0 || view.frame.size.height > 0 {
+                view.snp.remakeConstraints { (make) in
+                    make.centerX.equalToSuperview().offset(contentOffset.x)
+                    make.centerY.equalToSuperview().offset(contentOffset.y)
+                    make.width.equalTo(view.frame.size.width)
+                    make.height.equalTo(view.frame.size.height)
+                }
+            } else {
+                view.snp.makeConstraints { (make) in
+                    make.centerX.equalToSuperview().offset(contentOffset.x)
+                    make.centerY.equalToSuperview().offset(contentOffset.y)
+                }
+            }
+            let scaleAnimation = CABasicAnimation(keyPath: "transform")
+            scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(0, 0, 1))
+            scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1, 1, 1))
+            scaleAnimation.isCumulative = false
+            scaleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
+
+            let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+            opacityAnimation.fromValue = 0
+            opacityAnimation.toValue = 1
+            opacityAnimation.isCumulative = false
+            opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+
+            let group = CAAnimationGroup()
+            group.duration = 0.5
+            group.isRemovedOnCompletion = false
+            group.repeatCount = 1
+            group.fillMode = CAMediaTimingFillMode.forwards
+            group.animations = [scaleAnimation, opacityAnimation]
+            view.layer.add(group, forKey: "scale")
+        } else if HDHUD.displayPosition == .navigationBarMask || HDHUD.displayPosition == .top {
+            //防止外层设置frame
+            let navigationBarMaskView = UIView()
+            if HDHUD.displayPosition == .navigationBarMask {
+                navigationBarMaskView.backgroundColor = view.backgroundColor
+                shared.bgView.insertSubview(navigationBarMaskView, belowSubview: view)
+                navigationBarMaskView.snp.makeConstraints { make in
+                    make.centerX.equalToSuperview().offset(contentOffset.x)
+                    make.top.equalToSuperview()
+                    make.width.equalToSuperview()
+                }
+                view.backgroundColor = UIColor.clear
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
                     view.snp.remakeConstraints { (make) in
                         make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.centerY.equalToSuperview().offset(contentOffset.y)
+                        make.top.equalToSuperview().offset(ZXKitUtil_StatusBar_Height)
+                        make.bottom.equalTo(navigationBarMaskView)
                         make.width.equalTo(view.frame.size.width)
                         make.height.equalTo(view.frame.size.height)
                     }
                 } else {
                     view.snp.makeConstraints { (make) in
                         make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.centerY.equalToSuperview().offset(contentOffset.y)
+                        make.top.equalToSuperview().offset(ZXKitUtil_StatusBar_Height)
+                        make.bottom.equalTo(navigationBarMaskView)
                     }
                 }
-                let scaleAnimation = CABasicAnimation(keyPath: "transform")
-                scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(0, 0, 1))
-                scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1, 1, 1))
-                scaleAnimation.isCumulative = false
-                scaleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
-
-                let opacityAnimation = CABasicAnimation(keyPath: "opacity")
-                opacityAnimation.fromValue = 0
-                opacityAnimation.toValue = 1
-                opacityAnimation.isCumulative = false
-                opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-
-                let group = CAAnimationGroup()
-                group.duration = 0.5
-                group.isRemovedOnCompletion = false
-                group.repeatCount = 1
-                group.fillMode = CAMediaTimingFillMode.forwards
-                group.animations = [scaleAnimation, opacityAnimation]
-                view.layer.add(group, forKey: "scale")
-            case .navigation:
-                //防止外层设置frame
+            } else {
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
                     view.snp.remakeConstraints { (make) in
                         make.centerX.equalToSuperview().offset(contentOffset.x)
@@ -390,17 +419,45 @@ private extension HDHUD {
                         make.top.equalToSuperview().offset(ZXKitUtil_StatusBar_Height)
                     }
                 }
-                let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")
-                transformAnimation.fromValue = -ZXKitUtil_Default_Nav_And_Status_Height()
-                transformAnimation.duration = 0.3
-                transformAnimation.fillMode = CAMediaTimingFillMode.forwards
-                transformAnimation.isCumulative = false
-                transformAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-                transformAnimation.isRemovedOnCompletion = false
-                transformAnimation.repeatCount = 1
-                view.layer.add(transformAnimation, forKey: "navigation")
-
-            case .tab:
+            }
+            
+            let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")
+            transformAnimation.fromValue = -ZXKitUtil_Default_Nav_And_Status_Height()
+            transformAnimation.duration = 0.3
+            transformAnimation.fillMode = CAMediaTimingFillMode.forwards
+            transformAnimation.isCumulative = false
+            transformAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            transformAnimation.isRemovedOnCompletion = false
+            transformAnimation.repeatCount = 1
+            navigationBarMaskView.layer.add(transformAnimation, forKey: "navigation")
+            view.layer.add(transformAnimation, forKey: "navigation")
+        }  else if HDHUD.displayPosition == .tabBarMask || HDHUD.displayPosition == .bottom {
+            let tabBarMaskView = UIView()
+            if HDHUD.displayPosition == .tabBarMask {
+                tabBarMaskView.backgroundColor = view.backgroundColor
+                shared.bgView.insertSubview(tabBarMaskView, belowSubview: view)
+                tabBarMaskView.snp.makeConstraints { make in
+                    make.centerX.equalToSuperview().offset(contentOffset.x)
+                    make.bottom.equalToSuperview()
+                    make.width.equalToSuperview()
+                }
+                view.backgroundColor = UIColor.clear
+                if view.frame.size.width > 0 || view.frame.size.height > 0 {
+                    view.snp.remakeConstraints { (make) in
+                        make.centerX.equalToSuperview().offset(contentOffset.x)
+                        make.bottom.equalToSuperview().offset(-ZXKitUtil_HomeIndicator_Height)
+                        make.top.equalTo(tabBarMaskView)
+                        make.width.equalTo(view.frame.size.width)
+                        make.height.equalTo(view.frame.size.height)
+                    }
+                } else {
+                    view.snp.makeConstraints { (make) in
+                        make.centerX.equalToSuperview().offset(contentOffset.x)
+                        make.bottom.equalToSuperview().offset(-ZXKitUtil_HomeIndicator_Height)
+                        make.top.equalTo(tabBarMaskView)
+                    }
+                }
+            } else {
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
                     view.snp.remakeConstraints { (make) in
                         make.centerX.equalToSuperview().offset(contentOffset.x)
@@ -414,15 +471,17 @@ private extension HDHUD {
                         make.bottom.equalToSuperview().offset(-ZXKitUtil_HomeIndicator_Height)
                     }
                 }
-                let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")
-                transformAnimation.fromValue = UIScreenHeight + ZXKitUtil_Default_Tabbar_Height()
-                transformAnimation.duration = 0.3
-                transformAnimation.fillMode = CAMediaTimingFillMode.forwards
-                transformAnimation.isCumulative = false
-                transformAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-                transformAnimation.isRemovedOnCompletion = false
-                transformAnimation.repeatCount = 1
-                view.layer.add(transformAnimation, forKey: "tab")
+            }
+            let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")
+            transformAnimation.fromValue = UIScreenHeight + ZXKitUtil_Default_Tabbar_Height()
+            transformAnimation.duration = 0.3
+            transformAnimation.fillMode = CAMediaTimingFillMode.forwards
+            transformAnimation.isCumulative = false
+            transformAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            transformAnimation.isRemovedOnCompletion = false
+            transformAnimation.repeatCount = 1
+            tabBarMaskView.layer.add(transformAnimation, forKey: "tab")
+            view.layer.add(transformAnimation, forKey: "tab")
         }
         //回调
         prevTask = task
