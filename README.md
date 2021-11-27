@@ -6,7 +6,7 @@
 
 ## Screenshots
 
-<img src="./demo.gif" style="width:200px" />
+<img src="./demo.gif" style="width:400px" />
 
 ## Integration
 
