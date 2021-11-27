@@ -44,8 +44,8 @@ class HDHUDProgressContentView: HDHUDContentView {
     }()
 
     lazy var mProgressView: CircularProgressView = {
-        let tProgressView = CircularProgressView(frame: CGRect(x: 27.5, y: 15, width: 65, height: 65))
-        tProgressView.trackLineWidth = 5
+        let tProgressView = CircularProgressView(frame: CGRect(x: 27.5, y: 15, width: 55, height: 55))
+        tProgressView.trackLineWidth = 4
         tProgressView.trackTintColor = HDHUD.trackTintColor
         tProgressView.progressTintColor = HDHUD.progressTintColor
         tProgressView.roundedProgressLineCap = true
@@ -80,12 +80,12 @@ extension HDHUDProgressContentView {
             } else {
                 make.right.equalToSuperview().offset(-15)
             }
-            make.width.height.equalTo(65)
+            make.width.height.equalTo(55)
         }
 
         self.addSubview(mImageView)
         mImageView.snp.makeConstraints { (make) in
-            make.width.height.equalTo(30)
+            make.width.height.equalTo(25)
             make.center.equalTo(mProgressView)
         }
 

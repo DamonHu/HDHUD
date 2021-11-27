@@ -74,8 +74,15 @@ extension HDHUDLabelContentView {
 
         //判断单一存在的情况
         guard let content = content, !content.isEmpty else {
-            self.snp.makeConstraints { (make) in
-                make.width.height.equalTo(100)
+            if HDHUD.displayPosition == .navigationBarMask || HDHUD.displayPosition == .tabBarMask {
+                self.snp.makeConstraints { (make) in
+                    make.width.equalTo(imageSize.width)
+                    make.height.equalTo(imageSize.height + 20)
+                }
+            } else {
+                self.snp.makeConstraints { (make) in
+                    make.width.height.equalTo(100)
+                }
             }
             mImageView.snp.makeConstraints { (make) in
                 make.center.equalToSuperview()
