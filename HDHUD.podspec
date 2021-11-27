@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name = 'HDHUD'
 s.swift_version = '5.0'
-s.version = '2.1.0'
+s.version = '2.1.1'
 s.license= { :type => "MIT", :file => "LICENSE" }
 s.summary = 'A simple and efficient HUD based on swift development'
 s.homepage = 'https://github.com/DamonHu/HDHUD'
@@ -17,10 +17,10 @@ s.subspec 'core' do |cs|
   cs.dependency 'SnapKit'
   cs.dependency 'ZXKitUtil'
 end
-s.subspec 'gif' do |cs|
-    cs.dependency 'HDHUD/core'
-    cs.dependency 'Kingfisher'
-end
+# s.subspec 'gif' do |cs|
+#     cs.dependency 'HDHUD/core'
+#     cs.dependency 'Kingfisher'
+# end
 s.default_subspec = "core"
 s.frameworks = 'UIKit'
 s.documentation_url = 'https://github.com/DamonHu/HDHUD'
