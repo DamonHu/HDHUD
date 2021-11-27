@@ -6,7 +6,7 @@
 
 ## Screenshots
 
-![](./demo.gif)
+![](./demo.gif =400x300) 
 
 
 ## Integration
