@@ -6,8 +6,7 @@
 
 ## Screenshots
 
-![](./demo.gif =400x300) 
-
+<img src="./demo.gif" style="width:200px" />
 
 ## Integration
 
