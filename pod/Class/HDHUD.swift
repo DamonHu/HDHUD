@@ -269,6 +269,7 @@ private extension HDHUD {
         if let task = task, self.sequenceTask.contains(task) {
             //还在序列中未展示的任务
             if let index = self.sequenceTask.firstIndex(of: task) {
+                task.closeButton?.removeFromSuperview()
                 self.sequenceTask.remove(at: index)
             }
             if let completion = task.completion {
@@ -284,6 +285,7 @@ private extension HDHUD {
                 for view in shared.bgView.subviews {
                     view.removeFromSuperview()
                 }
+                prevTask?.closeButton?.removeFromSuperview()
                 shared.bgView.removeFromSuperview()
                 task?.closeButton?.removeFromSuperview()
                 if let prev = prevTask, let completion = prev.completion {
@@ -296,6 +298,7 @@ private extension HDHUD {
             }
         }
         if autoNext, let prepareTask = sequenceTask.first {
+            prepareTask.closeButton?.removeFromSuperview()
             sequenceTask.removeFirst()
             if prepareTask.taskType == .progress {
                 self._showProgress(task: prepareTask as! HDHUDProgressTask)
@@ -331,6 +334,7 @@ private extension HDHUD {
             closeButton.layer.cornerRadius = 8
             closeButton.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
             closeButton.addTarget(shared, action: #selector(_onClickCloseButton), for: .touchUpInside)
+            //不放到bgView是因为bgView可能会忽略响应导致关闭按钮不可点击
             tSuperView.addSubview(closeButton)
             closeButton.snp.makeConstraints { make in
                 make.centerX.equalTo(view.snp.right).offset(-2)
