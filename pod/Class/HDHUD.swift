@@ -492,7 +492,9 @@ private extension HDHUD {
         prevTask = task
         //回调
         if let didAppear = task.didAppear {
-            didAppear()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                didAppear()
+            }
         }
         if HDHUD.isVibrate {
             DispatchQueue.main.async {
