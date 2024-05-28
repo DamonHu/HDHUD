@@ -7,6 +7,6 @@ target 'HDHUD' do
 
   # Pods for HDHUD
   pod 'SnapKit'
-  pod 'ZXKitUtil'
+  pod 'DDUtils'
 #  pod 'Kingfisher'
 end
