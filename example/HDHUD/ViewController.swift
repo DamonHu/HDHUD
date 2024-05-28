@@ -57,7 +57,7 @@ class ViewController: UIViewController {
         tTableView.separatorStyle = .singleLine
         tTableView.dataSource = self
         tTableView.delegate = self
-        tTableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.zx.className())
+        tTableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.dd.className())
         return tTableView
     }()
 }
@@ -73,7 +73,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let itemlist = dataList[indexPath.section]
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.zx.className())
+        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.dd.className())
         cell?.textLabel?.text = itemlist[indexPath.row]
         return cell!
     }
@@ -84,7 +84,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let label = UILabel()
         label.text = titleLabel[section]
         label.font = .systemFont(ofSize: 16)
-        label.textColor = UIColor.zx.color(hexValue: 0xffffff)
+        label.textColor = UIColor.dd.color(hexValue: 0xffffff)
         view.addSubview(label)
         label.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
