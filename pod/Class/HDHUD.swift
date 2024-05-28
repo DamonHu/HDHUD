@@ -76,7 +76,6 @@ open class HDHUD {
     public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImage = getLoadingImage()
     public static var loadingImageSize = CGSize(width: 28, height: 28)
-    public static var isVibrate = false
     public static var displayPosition: HDHUDDisplayPosition = .center
     #if canImport(Kingfisher)
     //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
@@ -494,11 +493,6 @@ private extension HDHUD {
         if let didAppear = task.didAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 didAppear()
-            }
-        }
-        if HDHUD.isVibrate {
-            DispatchQueue.main.async {
-                DDUtils.shared.startVibrate()
             }
         }
     }
