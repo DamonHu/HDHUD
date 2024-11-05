@@ -1,7 +1,7 @@
 # HDHUD
 
 
-## [中文文档](https://blog.hudongdong.com/ios/1178.html)
+## [中文文档](https://dongge.org/blog/1178.html)
 
 
 ## Screenshots
