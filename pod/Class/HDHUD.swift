@@ -77,12 +77,6 @@ open class HDHUD {
     public static var loadingImage = getLoadingImage()
     public static var loadingImageSize = CGSize(width: 28, height: 28)
     public static var displayPosition: HDHUDDisplayPosition = .center
-    #if canImport(Kingfisher)
-    //如果设置了`loadingImageURL`，加载图片将会优先使用URL资源
-    // If `loadingImageURL` is set, the URL resource will be used preferentially when loading images
-    @available(*, deprecated, message: "use loadingImage")
-    public static var loadingImageURL: URL? = URL(fileURLWithPath: URLPathHDBoundle(named: "loading.gif") ?? "")
-    #endif
     ///color and text
     public static var contentBackgroundColor = UIColor.dd.color(hexValue: 0x000000, alpha: 0.8)
     public static var backgroundColor = UIColor.dd.color(hexValue: 0x000000, alpha: 0.2) {
@@ -99,7 +93,11 @@ open class HDHUD {
     //private members
     private static var prevTask: HDHUDTask?
     private static var sequenceTask = [HDHUDTask]()
-    private let bgView = UIView()
+    private lazy var bgView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     static let shared = HDHUD()
     private static var mTimer: Timer? = nil
 }
@@ -310,6 +308,7 @@ private extension HDHUD {
     static func _showView(task: HDHUDTask) {
         assert(task.contentView != nil, "HDHUD contentView is nil")
         guard let view = task.contentView else { return }
+        
         //阻止点击
         shared.bgView.isUserInteractionEnabled = task.mask
         //show new view
@@ -320,13 +319,17 @@ private extension HDHUD {
         guard let tSuperView = tmpSuperView else { return }
         shared.bgView.backgroundColor = self.backgroundColor
         tSuperView.addSubview(shared.bgView)
-        shared.bgView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
+        
+        shared.bgView.leftAnchor.constraint(equalTo: tSuperView.leftAnchor).isActive = true
+        shared.bgView.topAnchor.constraint(equalTo: tSuperView.topAnchor).isActive = true
+        shared.bgView.rightAnchor.constraint(equalTo: tSuperView.rightAnchor).isActive = true
+        shared.bgView.bottomAnchor.constraint(equalTo: tSuperView.bottomAnchor).isActive = true
+        
         shared.bgView.insertSubview(view, at: 0)
         //关闭按钮
         if isShowCloseButton && task.duration < 0 {
             let closeButton = UIButton(type: .custom)
+            closeButton.translatesAutoresizingMaskIntoConstraints = false
             closeButton.isHidden = true
             closeButton.backgroundColor = HDHUD.contentBackgroundColor
             closeButton.layer.masksToBounds = true
@@ -335,11 +338,11 @@ private extension HDHUD {
             closeButton.addTarget(shared, action: #selector(_onClickCloseButton), for: .touchUpInside)
             //不放到bgView是因为bgView可能会忽略响应导致关闭按钮不可点击
             tSuperView.addSubview(closeButton)
-            closeButton.snp.makeConstraints { make in
-                make.centerX.equalTo(view.snp.right).offset(-2)
-                make.centerY.equalTo(view.snp.top).offset(2)
-                make.width.height.equalTo(16)
-            }
+            closeButton.centerXAnchor.constraint(equalTo: view.rightAnchor, constant: -2).isActive = true
+            closeButton.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
+            closeButton.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            closeButton.heightAnchor.constraint(equalToConstant: 16).isActive = true
+            
             task.closeButton = closeButton
             DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                 if let taskCloseButton = task.closeButton {
@@ -349,19 +352,16 @@ private extension HDHUD {
         }
         //添加动画
         if HDHUD.displayPosition == .center {
+            view.translatesAutoresizingMaskIntoConstraints = false
             //防止外层设置frame
             if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                view.snp.remakeConstraints { (make) in
-                    make.centerX.equalToSuperview().offset(contentOffset.x)
-                    make.centerY.equalToSuperview().offset(contentOffset.y)
-                    make.width.equalTo(view.frame.size.width)
-                    make.height.equalTo(view.frame.size.height)
-                }
+                view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                view.centerYAnchor.constraint(equalTo: shared.bgView.centerYAnchor, constant: contentOffset.y).isActive = true
+                view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
+                view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
             } else {
-                view.snp.makeConstraints { (make) in
-                    make.centerX.equalToSuperview().offset(contentOffset.x)
-                    make.centerY.equalToSuperview().offset(contentOffset.y)
-                }
+                view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                view.centerYAnchor.constraint(equalTo: shared.bgView.centerYAnchor, constant: contentOffset.y).isActive = true
             }
             let scaleAnimation = CABasicAnimation(keyPath: "transform")
             scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(0, 0, 1))
@@ -385,43 +385,37 @@ private extension HDHUD {
         } else if HDHUD.displayPosition == .navigationBarMask || HDHUD.displayPosition == .top {
             //防止外层设置frame
             let navigationBarMaskView = UIView()
+            navigationBarMaskView.translatesAutoresizingMaskIntoConstraints = false
             if HDHUD.displayPosition == .navigationBarMask {
                 navigationBarMaskView.backgroundColor = view.backgroundColor
                 shared.bgView.insertSubview(navigationBarMaskView, belowSubview: view)
-                navigationBarMaskView.snp.makeConstraints { make in
-                    make.centerX.equalToSuperview().offset(contentOffset.x)
-                    make.top.equalToSuperview()
-                    make.width.equalToSuperview()
-                }
+                navigationBarMaskView.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                navigationBarMaskView.topAnchor.constraint(equalTo: shared.bgView.topAnchor).isActive = true
+                navigationBarMaskView.widthAnchor.constraint(equalTo: shared.bgView.widthAnchor).isActive = true
+                
                 view.backgroundColor = UIColor.clear
+                view.translatesAutoresizingMaskIntoConstraints = false
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.snp.remakeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.top.equalToSuperview().offset(DDUtils_StatusBar_Height)
-                        make.bottom.equalTo(navigationBarMaskView)
-                        make.width.equalTo(view.frame.size.width)
-                        make.height.equalTo(view.frame.size.height)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
+                    view.bottomAnchor.constraint(equalTo: navigationBarMaskView.bottomAnchor).isActive = true
+                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
+                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
                 } else {
-                    view.snp.makeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.top.equalToSuperview().offset(DDUtils_StatusBar_Height)
-                        make.bottom.equalTo(navigationBarMaskView)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
+                    view.bottomAnchor.constraint(equalTo: navigationBarMaskView.bottomAnchor).isActive = true
                 }
             } else {
+                view.translatesAutoresizingMaskIntoConstraints = false
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.snp.remakeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.top.equalToSuperview().offset(DDUtils_StatusBar_Height)
-                        make.width.equalTo(view.frame.size.width)
-                        make.height.equalTo(view.frame.size.height)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
+                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
+                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
                 } else {
-                    view.snp.makeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.top.equalToSuperview().offset(DDUtils_StatusBar_Height)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
                 }
             }
             
@@ -440,40 +434,34 @@ private extension HDHUD {
             if HDHUD.displayPosition == .tabBarMask {
                 tabBarMaskView.backgroundColor = view.backgroundColor
                 shared.bgView.insertSubview(tabBarMaskView, belowSubview: view)
-                tabBarMaskView.snp.makeConstraints { make in
-                    make.centerX.equalToSuperview().offset(contentOffset.x)
-                    make.bottom.equalToSuperview()
-                    make.width.equalToSuperview()
-                }
+                tabBarMaskView.translatesAutoresizingMaskIntoConstraints = false
+                
+                tabBarMaskView.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                tabBarMaskView.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor).isActive = true
+                tabBarMaskView.widthAnchor.constraint(equalTo: shared.bgView.widthAnchor).isActive = true
                 view.backgroundColor = UIColor.clear
+                view.translatesAutoresizingMaskIntoConstraints = false
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.snp.remakeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.bottom.equalToSuperview().offset(-DDUtils_HomeIndicator_Height)
-                        make.top.equalTo(tabBarMaskView).offset(task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0)
-                        make.width.equalTo(view.frame.size.width)
-                        make.height.equalTo(view.frame.size.height)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
+                    view.topAnchor.constraint(equalTo: tabBarMaskView.topAnchor, constant: task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0).isActive = true
+                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
+                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
                 } else {
-                    view.snp.makeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.bottom.equalToSuperview().offset(-DDUtils_HomeIndicator_Height)
-                        make.top.equalTo(tabBarMaskView).offset(task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
+                    view.topAnchor.constraint(equalTo: tabBarMaskView.topAnchor, constant: task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0).isActive = true
                 }
             } else {
+                view.translatesAutoresizingMaskIntoConstraints = false
                 if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.snp.remakeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.bottom.equalToSuperview().offset(-DDUtils_HomeIndicator_Height)
-                        make.width.equalTo(view.frame.size.width)
-                        make.height.equalTo(view.frame.size.height)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
+                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
+                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
                 } else {
-                    view.snp.makeConstraints { (make) in
-                        make.centerX.equalToSuperview().offset(contentOffset.x)
-                        make.bottom.equalToSuperview().offset(-DDUtils_HomeIndicator_Height)
-                    }
+                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
+                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
                 }
             }
             let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")

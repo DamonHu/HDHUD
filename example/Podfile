@@ -6,7 +6,6 @@ target 'HDHUD' do
   use_frameworks!
 
   # Pods for HDHUD
-  pod 'SnapKit', '~> 5.0'
   pod 'DDUtils/ui', '~> 5.0'
 #  pod 'Kingfisher'
 end

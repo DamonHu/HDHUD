@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 class ViewController: UIViewController {
     let titleLabel = ["displayPosition: top", "displayPosition: center", "displayPosition: bottom", "displayPosition: navigationBarMask", "displayPosition: tabBarMask"]
@@ -22,9 +21,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(mTableView)
-        mTableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        
+        mTableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        mTableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        mTableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        mTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
 
     //自定义视图
@@ -37,11 +38,11 @@ class ViewController: UIViewController {
     //自定义视图使用snapkit布局
     lazy var mCustomView2: UIView = {
         let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.white
-        view.snp.makeConstraints { (make) in
-            make.width.equalTo(200)
-            make.height.equalTo(100)
-        }
+        view.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
         return view
     }()
     
@@ -51,6 +52,7 @@ class ViewController: UIViewController {
         if #available(iOS 15.0, *) {
             tTableView.sectionHeaderTopPadding = 0
         }
+        tTableView.translatesAutoresizingMaskIntoConstraints = false
         tTableView.rowHeight = 40
         tTableView.backgroundColor = UIColor.clear
         tTableView.showsVerticalScrollIndicator = false
@@ -82,14 +84,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let view = UIView()
         view.backgroundColor = UIColor.orange
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = titleLabel[section]
         label.font = .systemFont(ofSize: 16)
         label.textColor = UIColor.dd.color(hexValue: 0xffffff)
         view.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(20)
-        }
+        label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
         return view
     }
     
