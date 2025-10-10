@@ -76,8 +76,8 @@ extension HDHUDLabelContentView {
             }
             mImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
             mImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-            mImageView.widthAnchor.constraint(equalToConstant: imageSize.width).isActive = true
-            mImageView.heightAnchor.constraint(equalToConstant: imageSize.height).isActive = true
+            mImageView.widthAnchor.constraint(equalToConstant: imageSize.width + 10).isActive = true
+            mImageView.heightAnchor.constraint(equalToConstant: imageSize.height + 10).isActive = true
             return
         }
         guard icon != .none else {

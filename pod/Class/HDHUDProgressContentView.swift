@@ -6,16 +6,12 @@
 //
 
 import UIKit
-import DDUtils
-#if canImport(Kingfisher)
-import Kingfisher
-#endif
 
 class HDHUDProgressContentView: HDHUDContentView {
     var progress: Float = 0 {
         willSet {
-            self.mLabel.text = String(format: "%.2f%%", newValue * 100)
-            self.mProgressView.progress = newValue
+            self.mLabel.text = String(format: "%.1f%%", newValue * 100)
+            self.mProgressView.setProgress(newValue, animated: true)
         }
     }
 
@@ -36,13 +32,13 @@ class HDHUDProgressContentView: HDHUDContentView {
         return tImageView
     }()
 
-    lazy var mProgressView: CircularProgressView = {
-        let tProgressView = CircularProgressView(frame: CGRect(x: 27.5, y: 15, width: 55, height: 55))
+    lazy var mProgressView: UIProgressView = {
+        let tProgressView = UIProgressView()
+        tProgressView.layer.masksToBounds = true
+        tProgressView.layer.cornerRadius = 6
         tProgressView.translatesAutoresizingMaskIntoConstraints = false
-        tProgressView.trackLineWidth = 4
         tProgressView.trackTintColor = HDHUD.trackTintColor
         tProgressView.progressTintColor = HDHUD.progressTintColor
-        tProgressView.roundedProgressLineCap = true
         return tProgressView
     }()
     
@@ -52,8 +48,8 @@ class HDHUDProgressContentView: HDHUDContentView {
         tLabel.text = "0%"
         tLabel.numberOfLines = 0
         tLabel.textAlignment = .center
-        tLabel.textColor = HDHUD.textColor
-        tLabel.font = HDHUD.textFont
+        tLabel.textColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.00)
+        tLabel.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         return tLabel
     }()
 }
@@ -61,38 +57,38 @@ class HDHUDProgressContentView: HDHUDContentView {
 extension HDHUDProgressContentView {
     func createUI(direction: HDHUDContentDirection) {
         self.addSubview(mImageView)
-        self.addSubview(mLabel)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.widthAnchor.constraint(lessThanOrEqualToConstant: 240).isActive = true
-        
-
         self.addSubview(mProgressView)
-        mProgressView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
-        mProgressView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
         if direction == .horizontal {
-            mProgressView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
-        } else {
+            mImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
+            mImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+            mImageView.widthAnchor.constraint(equalToConstant: HDHUD.loadingImageSize.width).isActive = true
+            mImageView.heightAnchor.constraint(equalToConstant: HDHUD.loadingImageSize.height).isActive = true
+            mImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+            
+            mProgressView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            mProgressView.leftAnchor.constraint(equalTo: mImageView.rightAnchor, constant: 15).isActive = true
             mProgressView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
-        }
-        mProgressView.widthAnchor.constraint(equalToConstant: 55).isActive = true
-        mProgressView.heightAnchor.constraint(equalToConstant: 55).isActive = true
-        
-        
-        self.addSubview(mImageView)
-        mImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        mImageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        mImageView.centerXAnchor.constraint(equalTo: mProgressView.centerXAnchor).isActive = true
-        mImageView.centerYAnchor.constraint(equalTo: mProgressView.centerYAnchor).isActive = true
-
-        self.addSubview(mLabel)
-        if direction == .horizontal {
-            mLabel.leftAnchor.constraint(equalTo: mProgressView.rightAnchor, constant: 8).isActive = true
-            mLabel.centerYAnchor.constraint(equalTo: mProgressView.centerYAnchor).isActive = true
-            mLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
+            mProgressView.widthAnchor.constraint(equalToConstant: 140).isActive = true
+            mProgressView.heightAnchor.constraint(equalToConstant: 12).isActive = true
         } else {
-            mLabel.topAnchor.constraint(equalTo: mProgressView.bottomAnchor, constant: 8).isActive = true
-            mLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-            mLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+            mImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+            mImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+            mImageView.widthAnchor.constraint(equalToConstant: HDHUD.loadingImageSize.width).isActive = true
+            mImageView.heightAnchor.constraint(equalToConstant: HDHUD.loadingImageSize.height).isActive = true
+            
+            mProgressView.topAnchor.constraint(equalTo: mImageView.bottomAnchor, constant: 15).isActive = true
+            mProgressView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
+            mProgressView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
+            mProgressView.widthAnchor.constraint(equalToConstant: 160).isActive = true
+            mProgressView.heightAnchor.constraint(equalToConstant: 12).isActive = true
+            mProgressView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
         }
+        
+        
+        mProgressView.addSubview(mLabel)
+        mLabel.centerYAnchor.constraint(equalTo: mProgressView.centerYAnchor).isActive = true
+        mLabel.rightAnchor.constraint(equalTo: mProgressView.rightAnchor, constant: -5).isActive = true
     }
 }

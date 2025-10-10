@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DDUtils
 
 public enum HDHUDIconType {
     case none
@@ -26,29 +25,12 @@ public enum HDHUDDisplayPosition {
     case top
     case center
     case bottom
-    
     case navigationBarMask
     case tabBarMask
 }
 
-/**当页面正在展示toast，此时再调用显示模式，会根据优先级的设置进行展示。
-
- low： 已有toast在显示的情况下，该条提示不显示
- overlay: 该提示和当前在展示的toast同时叠加显示
- high：关闭当前在展示的toast，立即展示当前要显示的toast
- sequence: 当前展示的toast结束之后，展示本条即将显示的toast
-
- When the toast is being displayed on the page, the display mode will be called at this time to display according to the priority setting.
-
- low: this prompt will not be displayed when a toast is already displayed
- overlay: the prompt is superimposed with the toast currently displayed
- high: close the toast currently displayed and display the toast to be displayed
- sequence: display the toast to be displayed after the toast currently displayed
-*/
-public enum HDHUDPriority {
-    case low
-    case overlay
-    case high
+public enum HDHUDDisplayTypee {
+    case single
     case sequence
 }
 
@@ -67,6 +49,8 @@ func URLPathHDBoundle(named: String?) -> String? {
 }
 
 open class HDHUD {
+    public static var displayPosition: HDHUDDisplayPosition = .top
+    public static var displayType: HDHUDDisplayTypee = .sequence
     ///images
     public static var warnImage = UIImageHDBoundle(named: "ic_warning")
     public static var warnImageSize = CGSize(width: 24, height: 24)
@@ -75,31 +59,20 @@ open class HDHUD {
     public static var successImage = UIImageHDBoundle(named: "ic_success")
     public static var successImageSize = CGSize(width: 24, height: 24)
     public static var loadingImage = getLoadingImage()
-    public static var loadingImageSize = CGSize(width: 28, height: 28)
-    public static var displayPosition: HDHUDDisplayPosition = .center
+    public static var loadingImageSize = CGSize(width: 18, height: 18)
     ///color and text
-    public static var contentBackgroundColor = UIColor.dd.color(hexValue: 0x000000, alpha: 0.8)
-    public static var backgroundColor = UIColor.dd.color(hexValue: 0x000000, alpha: 0.2) {
-        willSet {
-            self.shared.bgView.backgroundColor = newValue
-        }
-    }
-    public static var textColor = UIColor.dd.color(hexValue: 0xFFFFFF)
+    public static var contentBackgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
+    public static var backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
+    public static var textColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.00)
     public static var textFont = UIFont.systemFont(ofSize: 16)
     public static var contentOffset = CGPoint.zero
-    public static var progressTintColor = UIColor.dd.color(hexValue: 0xFF8F0C)
-    public static var trackTintColor = UIColor.dd.color(hexValue: 0xFFFFFF)
-    public static var isShowCloseButton = true
+    public static var progressTintColor = UIColor(red: 1.0, green: 0.6, blue: 0.0, alpha: 1.00)
+    public static var trackTintColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.00)
+    public static var isShowCloseButton = false
+    public static var isUserInteractionEnabled = false
     //private members
-    private static var prevTask: HDHUDTask?
     private static var sequenceTask = [HDHUDTask]()
-    private lazy var bgView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     static let shared = HDHUD()
-    private static var mTimer: Timer? = nil
 }
 
 //MARK: Public Method
@@ -110,224 +83,65 @@ public extension HDHUD {
     ///   - icon: icon type
     ///   - direction: Layout direction of icon and text
     ///   - duration: specifies the time when the HUD is automatically turned off, `-1` means not to turn off automatically
-    ///   - superView: the upper view of the HUD, the default is the current window
-    ///   - mask: whether the bottom view responds when the hud pops up
-    ///   - priority:  When the toast is being displayed on the page, the display mode will be called at this time to display according to the priority setting.
     ///   - didAppear: callback after the HUD is appear
     ///   - completion: callback after the HUD is closed
     @discardableResult
-    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
+    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 3.5, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .text, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        DDUtils.shared.runInMainThread(type: .sync) {
-            //显示的页面
-            task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
-            //展示
-            self.show(task: task)
-        }
+        let task = HDHUDTask(taskType: .text, duration: duration, didAppear: didAppear, completion: completion)
+        //显示的页面
+        task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
+        //展示
+        self.show(task: task)
         return task
     }
 
     //display progress hud
     @discardableResult
-    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
-        let task = HDHUDProgressTask(taskType: .progress, duration: -1, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        DDUtils.shared.runInMainThread(type: .sync) {
-            //显示的页面
-            task.contentView = HDHUDProgressContentView(direction: direction)
-            task.progress = progress
-            //展示
-            self.show(task: task)
-        }
+    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 6, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
+        let task = HDHUDProgressTask(taskType: .progress, duration: duration, didAppear: didAppear, completion: completion)
+        //显示的页面
+        task.contentView = HDHUDProgressContentView(direction: direction)
+        task.progress = progress
+        //展示
+        self.show(task: task)
         return task
     }
 
     //display customview
     @discardableResult
-    static func show(customView: UIView, duration: TimeInterval = 2.5, superView: UIView? = nil, mask: Bool = false, priority: HDHUDPriority = .high, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
+    static func show(customView: UIView, duration: TimeInterval = 3.5, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .custom, duration: duration, superView: superView, mask: mask, priority: priority, didAppear: didAppear, completion: completion)
-        DDUtils.shared.runInMainThread(type: .sync) {
-            //显示的页面
-            task.contentView = customView
-            //展示
-            self.show(task: task)
-        }
+        let task = HDHUDTask(taskType: .custom, duration: duration, didAppear: didAppear, completion: completion)
+        //显示的页面
+        task.contentView = customView
+        //展示
+        self.show(task: task)
         return task
     }
 
     //display use task
     static func show(task: HDHUDTask) {
-        DDUtils.shared.runInMainThread(type: .sync) {
-            if task.taskType == .progress {
-                self._showProgress(task: task as! HDHUDProgressTask)
-            } else {
-                self._show(task: task)
-            }
-        }
+        self._show(task: task)
     }
 
-    static func hide(task: HDHUDTask? = nil) {
-        DDUtils.shared.runInMainThread(type: .sync) {
-            self._hide(task: task, autoNext: true)
-        }
-    }
-
-
-    /// clear and hide all HUDs, including undescending in the sequence
-    /// - Parameter completeValid: Whether to call back the task completion when the hud in the sequence is cleared
-    static func clearAll(completeValid: Bool = false) {
-        if completeValid {
-            for task in self.sequenceTask {
-                if let completion = task.completion {
-                    completion()
-                }
-            }
-        }
-        self.sequenceTask.removeAll()
-        DDUtils.shared.runInMainThread(type: .sync) {
-            self._hide(task: nil, autoNext: false)
-        }
+    static func hide(task: HDHUDTask? = nil, animation: Bool = true) {
+        self._hide(task: task, animation: animation)
     }
 }
 
 ///MARK: Private Method
 private extension HDHUD {
     static func _show(task: HDHUDTask) {
-        //根据下次即将显示的类型进行清理
-        if prevTask != nil {
-            switch task.priority {
-            case .low:
-                //当前有显示，忽略掉不显示
-                if let completion = task.completion {
-                    completion()
-                }
-                return
-            case .overlay:
-                //重叠显示
-                break
-            case .high:
-                //移除当前显示
-                self._hide(task: prevTask, autoNext: false)
-            case .sequence:
-                //添加到序列
-                self.sequenceTask.append(task)
-                return
-            }
+        if self.displayType == .single {
+            self._hide(animation: false)
         }
-        self._showView(task: task)
-        //设置当前正在显示的hud类型
-        if task.duration > 0 {
-            if mTimer != nil {
-                mTimer?.invalidate()
-                mTimer = nil
-            }
-            mTimer = Timer(fire: Date(timeIntervalSinceNow: task.duration), interval: 0, repeats: false) { (timer) in
-                //自动关闭当前显示
-                self._hide(task: task, autoNext: true)
-            }
-            RunLoop.main.add(mTimer!, forMode: .common)
-        }
-    }
-    
-    static func _showProgress(task: HDHUDProgressTask) {
-        //当前正在显示的就是进度条，直接更新进度
-        if let prevTask = prevTask, prevTask.taskType == .progress {
-            let contentView = prevTask.contentView as! HDHUDProgressContentView
-            contentView.progress = task.progress
-        } else {
-            if prevTask != nil {
-                switch task.priority {
-                case .low:
-                    if let completion = task.completion {
-                        completion()
-                    }
-                    //当前有显示，忽略掉不显示
-                    return
-                case .overlay:
-                    //重叠显示
-                    break
-                case .high:
-                    //直接显示
-                    self._hide(task: prevTask, autoNext: false)
-                case .sequence:
-                    //添加到序列，稍后再显示
-                    self.sequenceTask.append(task)
-                    return
-                }
-            }
-            let contentView = task.contentView as! HDHUDProgressContentView
-            contentView.progress = task.progress
-            self._showView(task: task)
-        }
-    }
-    
-    static func _hide(task: HDHUDTask? = nil, autoNext: Bool = true) {
-        if let task = task, self.sequenceTask.contains(task) {
-            //还在序列中未展示的任务
-            if let index = self.sequenceTask.firstIndex(of: task) {
-                task.closeButton?.removeFromSuperview()
-                self.sequenceTask.remove(at: index)
-            }
-            if let completion = task.completion {
-                completion()
-            }
-        } else {
-            //未指定，或者是正在显示task
-            if task == nil || task == prevTask {
-                if mTimer != nil {
-                    mTimer?.invalidate()
-                    mTimer = nil
-                }
-                for view in shared.bgView.subviews {
-                    view.removeFromSuperview()
-                }
-                prevTask?.closeButton?.removeFromSuperview()
-                shared.bgView.removeFromSuperview()
-                task?.closeButton?.removeFromSuperview()
-                if let prev = prevTask, let completion = prev.completion {
-                    completion()
-                }
-                prevTask = nil
-            } else {
-                print("task invalid")
-                return
-            }
-        }
-        if autoNext, let prepareTask = sequenceTask.first {
-            prepareTask.closeButton?.removeFromSuperview()
-            sequenceTask.removeFirst()
-            if prepareTask.taskType == .progress {
-                self._showProgress(task: prepareTask as! HDHUDProgressTask)
-            } else {
-                self._show(task: prepareTask)
-            }
-        }
-    }
-
-    static func _showView(task: HDHUDTask) {
-        assert(task.contentView != nil, "HDHUD contentView is nil")
-        guard let view = task.contentView else { return }
-        
-        //阻止点击
-        shared.bgView.isUserInteractionEnabled = task.mask
-        //show new view
-        var tmpSuperView = task.superView
-        if HDHUD.displayPosition == .navigationBarMask || HDHUD.displayPosition == .tabBarMask ||  HDHUD.displayPosition == .top ||  HDHUD.displayPosition == .bottom ||  tmpSuperView == nil {
-            tmpSuperView = DDUtils.shared.getCurrentNormalWindow()
-        }
-        guard let tSuperView = tmpSuperView else { return }
-        shared.bgView.backgroundColor = self.backgroundColor
-        tSuperView.addSubview(shared.bgView)
-        
-        shared.bgView.leftAnchor.constraint(equalTo: tSuperView.leftAnchor).isActive = true
-        shared.bgView.topAnchor.constraint(equalTo: tSuperView.topAnchor).isActive = true
-        shared.bgView.rightAnchor.constraint(equalTo: tSuperView.rightAnchor).isActive = true
-        shared.bgView.bottomAnchor.constraint(equalTo: tSuperView.bottomAnchor).isActive = true
-        
-        shared.bgView.insertSubview(view, at: 0)
-        //关闭按钮
-        if isShowCloseButton && task.duration < 0 {
+        self.sequenceTask.append(task)
+        task.isVisible = true
+        guard let taskContentVC = HDHUDWindow.shared.rootViewController as? HDHUDTaskViewController else { return  }
+        //视图
+        let contentView = task.contentView
+        if self.isShowCloseButton && task.duration == -1 && self.isUserInteractionEnabled {
             let closeButton = UIButton(type: .custom)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
             closeButton.isHidden = true
@@ -336,151 +150,47 @@ private extension HDHUD {
             closeButton.layer.cornerRadius = 8
             closeButton.setImage(UIImageHDBoundle(named: "icon_close"), for: .normal)
             closeButton.addTarget(shared, action: #selector(_onClickCloseButton), for: .touchUpInside)
-            //不放到bgView是因为bgView可能会忽略响应导致关闭按钮不可点击
-            tSuperView.addSubview(closeButton)
-            closeButton.centerXAnchor.constraint(equalTo: view.rightAnchor, constant: -2).isActive = true
-            closeButton.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
+            contentView.addSubview(closeButton)
+            closeButton.centerXAnchor.constraint(equalTo: contentView.rightAnchor, constant: -2).isActive = true
+            closeButton.centerYAnchor.constraint(equalTo: contentView.topAnchor, constant: 2).isActive = true
             closeButton.widthAnchor.constraint(equalToConstant: 16).isActive = true
             closeButton.heightAnchor.constraint(equalToConstant: 16).isActive = true
-            
             task.closeButton = closeButton
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 if let taskCloseButton = task.closeButton {
                     taskCloseButton.isHidden = false
                 }
             }
         }
-        //添加动画
-        if HDHUD.displayPosition == .center {
-            view.translatesAutoresizingMaskIntoConstraints = false
-            //防止外层设置frame
-            if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                view.centerYAnchor.constraint(equalTo: shared.bgView.centerYAnchor, constant: contentOffset.y).isActive = true
-                view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
-                view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
-            } else {
-                view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                view.centerYAnchor.constraint(equalTo: shared.bgView.centerYAnchor, constant: contentOffset.y).isActive = true
-            }
-            let scaleAnimation = CABasicAnimation(keyPath: "transform")
-            scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(0, 0, 1))
-            scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1, 1, 1))
-            scaleAnimation.isCumulative = false
-            scaleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
-
-            let opacityAnimation = CABasicAnimation(keyPath: "opacity")
-            opacityAnimation.fromValue = 0
-            opacityAnimation.toValue = 1
-            opacityAnimation.isCumulative = false
-            opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-
-            let group = CAAnimationGroup()
-            group.duration = 0.5
-            group.isRemovedOnCompletion = false
-            group.repeatCount = 1
-            group.fillMode = CAMediaTimingFillMode.forwards
-            group.animations = [scaleAnimation, opacityAnimation]
-            view.layer.add(group, forKey: "scale")
-        } else if HDHUD.displayPosition == .navigationBarMask || HDHUD.displayPosition == .top {
-            //防止外层设置frame
-            let navigationBarMaskView = UIView()
-            navigationBarMaskView.translatesAutoresizingMaskIntoConstraints = false
-            if HDHUD.displayPosition == .navigationBarMask {
-                navigationBarMaskView.backgroundColor = view.backgroundColor
-                shared.bgView.insertSubview(navigationBarMaskView, belowSubview: view)
-                navigationBarMaskView.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                navigationBarMaskView.topAnchor.constraint(equalTo: shared.bgView.topAnchor).isActive = true
-                navigationBarMaskView.widthAnchor.constraint(equalTo: shared.bgView.widthAnchor).isActive = true
-                
-                view.backgroundColor = UIColor.clear
-                view.translatesAutoresizingMaskIntoConstraints = false
-                if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
-                    view.bottomAnchor.constraint(equalTo: navigationBarMaskView.bottomAnchor).isActive = true
-                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
-                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
-                } else {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
-                    view.bottomAnchor.constraint(equalTo: navigationBarMaskView.bottomAnchor).isActive = true
-                }
-            } else {
-                view.translatesAutoresizingMaskIntoConstraints = false
-                if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
-                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
-                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
-                } else {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.topAnchor.constraint(equalTo: shared.bgView.topAnchor, constant: DDUtils_StatusBar_Height).isActive = true
-                }
-            }
-            
-            let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")
-            transformAnimation.fromValue = -DDUtils_Default_Nav_And_Status_Height()
-            transformAnimation.duration = 0.3
-            transformAnimation.fillMode = CAMediaTimingFillMode.forwards
-            transformAnimation.isCumulative = false
-            transformAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-            transformAnimation.isRemovedOnCompletion = false
-            transformAnimation.repeatCount = 1
-            navigationBarMaskView.layer.add(transformAnimation, forKey: "navigation")
-            view.layer.add(transformAnimation, forKey: "navigation")
-        }  else if HDHUD.displayPosition == .tabBarMask || HDHUD.displayPosition == .bottom {
-            let tabBarMaskView = UIView()
-            if HDHUD.displayPosition == .tabBarMask {
-                tabBarMaskView.backgroundColor = view.backgroundColor
-                shared.bgView.insertSubview(tabBarMaskView, belowSubview: view)
-                tabBarMaskView.translatesAutoresizingMaskIntoConstraints = false
-                
-                tabBarMaskView.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                tabBarMaskView.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor).isActive = true
-                tabBarMaskView.widthAnchor.constraint(equalTo: shared.bgView.widthAnchor).isActive = true
-                view.backgroundColor = UIColor.clear
-                view.translatesAutoresizingMaskIntoConstraints = false
-                if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
-                    view.topAnchor.constraint(equalTo: tabBarMaskView.topAnchor, constant: task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0).isActive = true
-                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
-                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
-                } else {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
-                    view.topAnchor.constraint(equalTo: tabBarMaskView.topAnchor, constant: task.duration < 0 && HDHUD.isShowCloseButton ? 10 : 0).isActive = true
-                }
-            } else {
-                view.translatesAutoresizingMaskIntoConstraints = false
-                if view.frame.size.width > 0 || view.frame.size.height > 0 {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
-                    view.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
-                    view.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
-                } else {
-                    view.centerXAnchor.constraint(equalTo: shared.bgView.centerXAnchor, constant: contentOffset.x).isActive = true
-                    view.bottomAnchor.constraint(equalTo: shared.bgView.bottomAnchor, constant: -DDUtils_HomeIndicator_Height).isActive = true
-                }
-            }
-            let transformAnimation = CABasicAnimation(keyPath: "transform.translation.y")
-            transformAnimation.fromValue = UIScreenHeight + DDUtils_Default_Tabbar_Height()
-            transformAnimation.duration = 0.3
-            transformAnimation.fillMode = CAMediaTimingFillMode.forwards
-            transformAnimation.isCumulative = false
-            transformAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-            transformAnimation.isRemovedOnCompletion = false
-            transformAnimation.repeatCount = 1
-            tabBarMaskView.layer.add(transformAnimation, forKey: "tab")
-            view.layer.add(transformAnimation, forKey: "tab")
-        }
-        //回调
-        prevTask = task
-        //回调
+        taskContentVC.showToast(contentView: task.contentView)
         if let didAppear = task.didAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 didAppear()
+            }
+        }
+        if task.duration > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + task.duration) {
+                self._hide(task: task)
+            }
+        }
+    }
+    
+    static func _hide(task: HDHUDTask? = nil, animation: Bool = true) {
+        guard let taskContentVC = HDHUDWindow.shared.rootViewController as? HDHUDTaskViewController else { return  }
+        if let task = task {
+            task.isVisible = false
+            //还在序列中未展示的任务
+            if let index = self.sequenceTask.firstIndex(of: task) {
+                task.closeButton?.removeFromSuperview()
+                self.sequenceTask.remove(at: index)
+            }
+            if let completion = task.completion {
+                completion()
+            }
+            taskContentVC.hideToast(contentView: task.contentView, animation: animation)
+        } else {
+            for task in self.sequenceTask {
+                self._hide(task: task, animation: animation)
             }
         }
     }

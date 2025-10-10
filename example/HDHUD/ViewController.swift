@@ -9,14 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
     let titleLabel = ["displayPosition: top", "displayPosition: center", "displayPosition: bottom", "displayPosition: navigationBarMask", "displayPosition: tabBarMask"]
-    let dataList = [["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%", "图文纵版排序进度60%"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%", "图文纵版排序进度60%"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%", "图文纵版排序进度60%"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%", "图文纵版排序进度60%"],
-                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "进度60%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%", "图文纵版排序进度60%"]
+    let dataList = [["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度+30%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%"],
+                    ["纯文字", "多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示多行显示", "警告", "错误", "成功", "加载loading", "loading+文字", "进度30%", "图文纵版排序纯文字", "图文纵版排序警告", "图文纵版排序错误", "图文纵版排序成功", "图文纵版排序加载loading", "图文纵版排序进度30%"]
     ]
     
     var task: HDHUDProgressTask?
+    var task2: HDHUDProgressTask?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +60,7 @@ class ViewController: UIViewController {
         tTableView.separatorStyle = .singleLine
         tTableView.dataSource = self
         tTableView.delegate = self
-        tTableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.dd.className())
+        tTableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
         return tTableView
     }()
 }
@@ -75,7 +76,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let itemlist = dataList[indexPath.section]
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.dd.className())
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")
         cell?.textLabel?.text = itemlist[indexPath.row]
         return cell!
     }
@@ -87,7 +88,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = titleLabel[section]
         label.font = .systemFont(ofSize: 16)
-        label.textColor = UIColor.dd.color(hexValue: 0xffffff)
+        label.textColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.00)
         view.addSubview(label)
         label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
@@ -130,23 +131,28 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         case 6:
             HDHUD.show(item, icon: .loading)
         case 7:
-            HDHUD.showProgress(0.3)
+            if let task = self.task, task.isVisible {
+                task.progress = task.progress + 0.3
+            } else {
+                self.task =  HDHUD.showProgress(0.3)
+            }
         case 8:
-            HDHUD.showProgress(0.6)
-        case 9:
             HDHUD.show(item, icon: .none, direction: .vertical)
-        case 10:
+        case 9:
             HDHUD.show(item, icon: .warn, direction: .vertical)
-        case 11:
+        case 10:
             HDHUD.show(item, icon: .error, direction: .vertical)
-        case 12:
+        case 11:
             HDHUD.show(item, icon: .success, direction: .vertical)
-        case 13:
+        case 12:
             HDHUD.show(item, icon: .loading, direction: .vertical)
-        case 14:
-            HDHUD.showProgress(0.3, direction: .vertical)
-        case 15:
-            HDHUD.showProgress(0.6, direction: .vertical)
+        case 13:
+            if let task = self.task2, task.isVisible {
+                task.progress = task.progress + 0.3
+            } else {
+                self.task2 =  HDHUD.showProgress(0.3, direction: .vertical)
+            }
+        
         default:
             break
         }
