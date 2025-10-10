@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name = 'HDHUD'
 s.swift_version = '5.0'
-s.version = '3.1.0'
+s.version = '4.0.0'
 s.license= { :type => "MIT", :file => "LICENSE" }
 s.summary = 'A simple and efficient HUD based on swift development'
 s.homepage = 'https://github.com/DamonHu/HDHUD'
@@ -14,9 +14,8 @@ s.subspec 'core' do |cs|
     'HDHUD' => ['pod/Assets/*.png','pod/Assets/**/*.png', 'HDHUD/Pod/Assets/*.gif']
   }
   cs.source_files = "pod/Class/*.swift"
-  cs.dependency 'DDUtils/ui', '~> 5.0'
 end
 s.default_subspec = "core"
 s.frameworks = 'UIKit'
-s.documentation_url = 'https://github.com/DamonHu/HDHUD'
+s.documentation_url = 'https://blog.dongge.org/1396.html'
 end
