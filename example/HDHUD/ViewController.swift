@@ -114,43 +114,43 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
-        let item = dataList[indexPath.section][indexPath.row]
+        let title = dataList[indexPath.section][indexPath.row]
         switch indexPath.row {
         case 0:
-            HDHUD.show(item, icon: .none)
+            HDHUD.show(title, icon: .none)
         case 1:
-            HDHUD.show(item, icon: .none)
+            HDHUD.show(title, icon: .none)
         case 2:
-            HDHUD.show(item, icon: .warn)
+            HDHUD.show(title, icon: .warn)
         case 3:
-            HDHUD.show(item, icon: .error)
+            HDHUD.show(title, icon: .error)
         case 4:
-            HDHUD.show(item, icon: .success)
+            HDHUD.show(title, icon: .success)
         case 5:
-            HDHUD.show(nil, icon: .loading)
+            HDHUD.show(icon: .loading)
         case 6:
-            HDHUD.show(item, icon: .loading)
+            HDHUD.show(title, icon: .loading)
         case 7:
             if let task = self.task, task.isVisible {
                 task.progress = task.progress + 0.3
             } else {
-                self.task =  HDHUD.showProgress(0.3)
+                self.task =  HDHUD.show(progress: 0.3)
             }
         case 8:
-            HDHUD.show(item, icon: .none, direction: .vertical)
+            HDHUD.show(title, icon: .none, direction: .vertical)
         case 9:
-            HDHUD.show(item, icon: .warn, direction: .vertical)
+            HDHUD.show(title, icon: .warn, direction: .vertical)
         case 10:
-            HDHUD.show(item, icon: .error, direction: .vertical)
+            HDHUD.show(title, icon: .error, direction: .vertical)
         case 11:
-            HDHUD.show(item, icon: .success, direction: .vertical)
+            HDHUD.show(title, icon: .success, direction: .vertical)
         case 12:
-            HDHUD.show(item, icon: .loading, direction: .vertical)
+            HDHUD.show(title, icon: .loading, direction: .vertical)
         case 13:
             if let task = self.task2, task.isVisible {
                 task.progress = task.progress + 0.3
             } else {
-                self.task2 =  HDHUD.showProgress(0.3, direction: .vertical)
+                self.task2 =  HDHUD.show(progress:0.3, direction: .vertical)
             }
         
         default:

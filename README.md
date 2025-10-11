@@ -40,7 +40,7 @@ HDHUD.show(icon: .loading)
 HDHUD.show("Error message", icon: .error)
 
 // Progress display
-let task = HDHUD.showProgress(0.3)
+let task = HDHUD.show(progress: 0.3)
 // Update progress
 task.progress = task.progress + 0.3
 ```

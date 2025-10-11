@@ -79,27 +79,32 @@ open class HDHUD {
 public extension HDHUD {
     /// display HUD
     /// - Parameters:
-    ///   - content: content text
+    ///   - text: content text
     ///   - icon: icon type
     ///   - direction: Layout direction of icon and text
     ///   - duration: specifies the time when the HUD is automatically turned off, `-1` means not to turn off automatically
     ///   - didAppear: callback after the HUD is appear
     ///   - completion: callback after the HUD is closed
     @discardableResult
-    static func show(_ content: String? = nil, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 3.5, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
+    static func show(_ text: String?, icon: HDHUDIconType = .none, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 3.5, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .text, duration: duration, didAppear: didAppear, completion: completion)
+        let task = HDHUDTask(duration: duration, didAppear: didAppear, completion: completion)
         //显示的页面
-        task.contentView = HDHUDLabelContentView(content: content, icon: icon, direction: direction)
+        task.contentView = HDHUDLabelContentView(content: text, icon: icon, direction: direction)
         //展示
         self.show(task: task)
         return task
     }
+    
+    @discardableResult
+    static func show(icon: HDHUDIconType, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 3.5, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
+        return self.show(nil, icon: icon, direction: direction, duration: duration, didAppear: didAppear, completion: completion)
+    }
 
     //display progress hud
     @discardableResult
-    static func showProgress(_ progress: Float, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 6, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
-        let task = HDHUDProgressTask(taskType: .progress, duration: duration, didAppear: didAppear, completion: completion)
+    static func show(progress: Float, direction: HDHUDContentDirection = .horizontal, duration: TimeInterval = 6, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDProgressTask {
+        let task = HDHUDProgressTask(duration: duration, didAppear: didAppear, completion: completion)
         //显示的页面
         task.contentView = HDHUDProgressContentView(direction: direction)
         task.progress = progress
@@ -112,7 +117,7 @@ public extension HDHUD {
     @discardableResult
     static func show(customView: UIView, duration: TimeInterval = 3.5, didAppear: (()->Void)? = nil, completion: (()->Void)? = nil) -> HDHUDTask {
         //创建任务
-        let task = HDHUDTask(taskType: .custom, duration: duration, didAppear: didAppear, completion: completion)
+        let task = HDHUDTask(duration: duration, didAppear: didAppear, completion: completion)
         //显示的页面
         task.contentView = customView
         //展示
