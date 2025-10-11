@@ -125,7 +125,11 @@ public extension HDHUD {
         self._show(task: task)
     }
 
-    static func hide(task: HDHUDTask? = nil, animation: Bool = true) {
+    static func hide(animation: Bool = true) {
+        self._hide(animation: animation)
+    }
+    
+    static func hide(task: HDHUDTask?, animation: Bool = true) {
         self._hide(task: task, animation: animation)
     }
 }
@@ -175,24 +179,24 @@ private extension HDHUD {
         }
     }
     
-    static func _hide(task: HDHUDTask? = nil, animation: Bool = true) {
+    static func _hide(animation: Bool = true) {
         guard let taskContentVC = HDHUDWindow.shared.rootViewController as? HDHUDTaskViewController else { return  }
-        if let task = task {
-            task.isVisible = false
-            //还在序列中未展示的任务
-            if let index = self.sequenceTask.firstIndex(of: task) {
-                task.closeButton?.removeFromSuperview()
-                self.sequenceTask.remove(at: index)
-            }
-            if let completion = task.completion {
-                completion()
-            }
-            taskContentVC.hideToast(contentView: task.contentView, animation: animation)
-        } else {
-            for task in self.sequenceTask {
-                self._hide(task: task, animation: animation)
-            }
+        for task in self.sequenceTask {
+            self._hide(task: task, animation: animation)
         }
+    }
+    
+    static func _hide(task: HDHUDTask?, animation: Bool = true) {
+        guard let taskContentVC = HDHUDWindow.shared.rootViewController as? HDHUDTaskViewController, let task = task else { return  }
+        task.isVisible = false
+        if let index = self.sequenceTask.firstIndex(of: task) {
+            task.closeButton?.removeFromSuperview()
+            self.sequenceTask.remove(at: index)
+        }
+        if let completion = task.completion {
+            completion()
+        }
+        taskContentVC.hideToast(contentView: task.contentView, animation: animation)
     }
 
     @objc func _onClickCloseButton() {
