@@ -89,8 +89,7 @@ open class HDHUD {
     public static var contentOffset = CGPoint.zero
     public static var progressTintColor = UIColor(red: 1.0, green: 0.6, blue: 0.0, alpha: 1.0)
     public static var trackTintColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-    public static var isShowCloseButton = false
-    public static var isUserInteractionEnabled = false
+    public static var isMask = false
 }
 ```
 
@@ -98,7 +97,12 @@ open class HDHUD {
 
 ![](./demo.png)
 
-For scenarios with potentially long waits, when `duration` is set to `-1`, you can enable `isShowCloseButton` and `isUserInteractionEnabled`. This will display a close button at the top-right corner of the popup, allowing users to manually dismiss it.
+`closeButtonDelay` controls when the manual close button appears:
+
+* If greater than 0, the button is displayed after a delay, for example during data uploads, to prevent long periods of unresponsive UI from affecting user experience.
+* If set to -1, the button will not be shown.
+* If set to 0, the button appears immediately, and clicking it will close the corresponding toast.
+
 
 ## Project
 

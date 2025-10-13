@@ -45,6 +45,7 @@
 		E4461BBC2538296600B6BA35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4461BBB2538296600B6BA35 /* Assets.xcassets */; };
 		E4461BBF2538296600B6BA35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4461BBD2538296600B6BA35 /* LaunchScreen.storyboard */; };
 		E4ADD75626BAD410000BD07F /* icon_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4ADD75526BAD410000BD07F /* icon_close@3x.png */; };
+		E4E3C0F12E9CC5530087F7E9 /* HDTaskCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E3C0F02E9CC5530087F7E9 /* HDTaskCloseButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		E4461BBE2538296600B6BA35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E4461BC02538296600B6BA35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4ADD75526BAD410000BD07F /* icon_close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_close@3x.png"; sourceTree = "<group>"; };
+		E4E3C0F02E9CC5530087F7E9 /* HDTaskCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDTaskCloseButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 				E439955826F5A79B00814A0C /* UIView+Extension.swift */,
 				E443EAEA2E98CEAB00C1492C /* HDHUDWindow.swift */,
 				E443EAEC2E98CEFE00C1492C /* HDHUDTaskViewController.swift */,
+				E4E3C0F02E9CC5530087F7E9 /* HDTaskCloseButton.swift */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				E4240EF826A80B36000014A4 /* HDHUDProgressContentView.swift in Sources */,
 				E4240EFA26A80B36000014A4 /* HDHUD.swift in Sources */,
 				E443EAED2E98CEFE00C1492C /* HDHUDTaskViewController.swift in Sources */,
+				E4E3C0F12E9CC5530087F7E9 /* HDTaskCloseButton.swift in Sources */,
 				E4461BB32538296400B6BA35 /* AppDelegate.swift in Sources */,
 				E4240EFB26A80B36000014A4 /* HDHUDTask.swift in Sources */,
 			);

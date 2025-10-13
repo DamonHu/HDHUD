@@ -13,6 +13,10 @@ class HDHUDTaskViewController: UIViewController {
     private var currentDisplayPosition = HDHUDDisplayPosition.top
     private var contentOffset = HDHUD.contentOffset
     
+    var isVisible: Bool {
+        return !self.mStackView.subviews.isEmpty
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self._createUI()
@@ -31,8 +35,6 @@ class HDHUDTaskViewController: UIViewController {
 extension HDHUDTaskViewController {
     func showToast(contentView: UIView) {
         self.view.backgroundColor = HDHUD.backgroundColor
-        HDHUDWindow.shared.isUserInteractionEnabled = HDHUD.isUserInteractionEnabled
-        self.view.isUserInteractionEnabled = HDHUD.isUserInteractionEnabled
         //更新约束
         if (self.currentDisplayPosition != HDHUD.displayPosition || self.contentOffset != HDHUD.contentOffset) {
             self.contentOffset = HDHUD.contentOffset
@@ -75,8 +77,6 @@ extension HDHUDTaskViewController {
                 contentView.removeFromSuperview()
                 if self.mStackView.arrangedSubviews.isEmpty {
                     self.view.backgroundColor = .clear
-                    self.view.isUserInteractionEnabled = false
-                    HDHUDWindow.shared.isUserInteractionEnabled = false
                 }
             }
         } else {
@@ -84,8 +84,6 @@ extension HDHUDTaskViewController {
             contentView.removeFromSuperview()
             if self.mStackView.arrangedSubviews.isEmpty {
                 self.view.backgroundColor = .clear
-                self.view.isUserInteractionEnabled = false
-                HDHUDWindow.shared.isUserInteractionEnabled = false
             }
         }
         

@@ -27,6 +27,7 @@ class HDHUDLabelContentView: HDHUDContentView {
         tImageView.translatesAutoresizingMaskIntoConstraints = false
         return tImageView
     }()
+    
     lazy var mLabel: UILabel = {
         let tLabel = UILabel()
         tLabel.translatesAutoresizingMaskIntoConstraints = false

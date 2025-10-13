@@ -134,7 +134,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if let task = self.task, task.isVisible {
                 task.progress = task.progress + 0.3
             } else {
-                self.task =  HDHUD.show(progress: 0.3)
+                self.task =  HDHUD.show(progress: 0.3, closeButtonDelay: 0)
             }
         case 8:
             HDHUD.show(title, icon: .none, direction: .vertical)
@@ -150,7 +150,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if let task = self.task2, task.isVisible {
                 task.progress = task.progress + 0.3
             } else {
-                self.task2 =  HDHUD.show(progress:0.3, direction: .vertical)
+                self.task2 =  HDHUD.show(progress:0.3, text: "下载中", direction: .vertical)
             }
         
         default:

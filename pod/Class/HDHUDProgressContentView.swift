@@ -14,10 +14,22 @@ class HDHUDProgressContentView: HDHUDContentView {
             self.mProgressView.setProgress(newValue, animated: true)
         }
     }
+    var text: String? {
+        willSet {
+            self.mTextLabel.text = newValue
+            self.bottomConstraint?.isActive = false
+            self.bottomConstraint = mTextLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: (newValue != nil && newValue!.count > 0) ? -15 : -2)
+            self.bottomConstraint?.isActive = true
+        }
+    }
+    private var bottomConstraint: NSLayoutConstraint?
 
-    init(direction: HDHUDContentDirection = .horizontal) {
+    init(text: String?, direction: HDHUDContentDirection = .horizontal) {
         super.init()
         self.createUI(direction: direction)
+        defer {
+            self.text = text
+        }
     }
 
     required public init?(coder: NSCoder) {
@@ -52,6 +64,16 @@ class HDHUDProgressContentView: HDHUDContentView {
         tLabel.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         return tLabel
     }()
+    
+    lazy var mTextLabel: UILabel = {
+        let tLabel = UILabel()
+        tLabel.translatesAutoresizingMaskIntoConstraints = false
+        tLabel.numberOfLines = 0
+        tLabel.textAlignment = .center
+        tLabel.textColor = HDHUD.textColor
+        tLabel.font = HDHUD.textFont
+        return tLabel
+    }()
 }
 
 extension HDHUDProgressContentView {
@@ -65,9 +87,8 @@ extension HDHUDProgressContentView {
             mImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
             mImageView.widthAnchor.constraint(equalToConstant: HDHUD.loadingImageSize.width).isActive = true
             mImageView.heightAnchor.constraint(equalToConstant: HDHUD.loadingImageSize.height).isActive = true
-            mImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
             
-            mProgressView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            mProgressView.centerYAnchor.constraint(equalTo: self.mImageView.centerYAnchor).isActive = true
             mProgressView.leftAnchor.constraint(equalTo: mImageView.rightAnchor, constant: 15).isActive = true
             mProgressView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
             mProgressView.widthAnchor.constraint(equalToConstant: 140).isActive = true
@@ -83,12 +104,18 @@ extension HDHUDProgressContentView {
             mProgressView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
             mProgressView.widthAnchor.constraint(equalToConstant: 160).isActive = true
             mProgressView.heightAnchor.constraint(equalToConstant: 12).isActive = true
-            mProgressView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
         }
-        
         
         mProgressView.addSubview(mLabel)
         mLabel.centerYAnchor.constraint(equalTo: mProgressView.centerYAnchor).isActive = true
         mLabel.rightAnchor.constraint(equalTo: mProgressView.rightAnchor, constant: -5).isActive = true
+        
+        //文案描述
+        self.addSubview(mTextLabel)
+        mTextLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
+        mTextLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
+        mTextLabel.topAnchor.constraint(equalTo: mProgressView.bottomAnchor, constant: 13).isActive = true
+        self.bottomConstraint = mTextLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2)
+        self.bottomConstraint?.isActive = true
     }
 }

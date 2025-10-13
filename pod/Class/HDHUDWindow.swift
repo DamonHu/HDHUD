@@ -22,4 +22,19 @@ class HDHUDWindow: UIWindow {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard let hitView = super.hitTest(point, with: event) else { return nil }
+        //截取页面获取的所有点击
+        if HDHUD.isMask {
+            if let vc = self.rootViewController as? HDHUDTaskViewController, vc.isVisible {
+                return hitView
+            }
+            return nil
+        }
+        //点击背景不拦截，只拦截hud内容的点击
+        if let vc = self.rootViewController as? HDHUDTaskViewController, vc.isVisible, hitView.isDescendant(of: vc.mStackView) {
+            return hitView
+        }
+        return nil
+    }
 }
