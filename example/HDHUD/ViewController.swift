@@ -107,10 +107,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             HDHUD.displayPosition = .center
         case 2:
             HDHUD.displayPosition = .bottom
-        case 3:
-            HDHUD.displayPosition = .navigationBarMask
-        case 4:
-            HDHUD.displayPosition = .tabBarMask
         default:
             break
         }
@@ -127,9 +123,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         case 4:
             HDHUD.show(title, icon: .success)
         case 5:
-            HDHUD.show(icon: .loading)
+            HDHUD.showLoading()
         case 6:
-            HDHUD.show(title, icon: .loading)
+            HDHUD.showLoading(text: "ssss")
         case 7:
             if let task = self.task, task.isVisible {
                 task.progress = task.progress + 0.3
@@ -145,7 +141,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         case 11:
             HDHUD.show(title, icon: .success, direction: .vertical)
         case 12:
-            HDHUD.show(title, icon: .loading, direction: .vertical)
+            HDHUD.showLoading()
         case 13:
             if let task = self.task2, task.isVisible {
                 task.progress = task.progress + 0.3
