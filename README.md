@@ -1,7 +1,7 @@
 # HDHUD
 
 
-## [中文文档](https://blog.dongge.org/1396.html)
+## [中文文档](https://blog.dongge.net/1396.html)
 
 ## [V3版本文档](./README_3.0.md)
 
